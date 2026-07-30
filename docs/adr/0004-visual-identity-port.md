@@ -69,6 +69,18 @@ artifacts do not shift.
 `data-theme` attribute, no `localStorage`. `color-scheme: light dark` is set so
 scrollbars follow.
 
+**4. Two added texture tokens.** `--hatch` and `--blueprint` carry the diagonal
+hatching on the portrait panel and the blueprint grid on empty card thumbnails.
+Both are near-black at low alpha in light and near-white at low alpha in dark.
+They exist because the alternative is a color literal in `site.css`, and a fixed
+black overlay is invisible on a dark panel: `rgba(0,0,0,.035)` over `#26282c`
+moves the pixels by one or two units. html_artifacts already established this
+pattern for its own `--grid`, which is `none` in light and white-on-transparent
+in dark, so the site follows the precedent rather than inventing one.
+
+Found during implementation, after a task review flagged the hardcoded overlay
+as a plan-mandated defect.
+
 ## Alternatives rejected
 
 **Copying `artifacts.css` wholesale.** Brings `.progress-rail`, `.qa`, `.fold`,

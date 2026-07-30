@@ -496,6 +496,8 @@ Adjust the source path to wherever `the_LAB/html_artifacts` sits relative to thi
   --warn-soft: rgba(207, 75, 46, .10);
   --warn-border: rgba(207, 75, 46, .34);
   --grid: none;
+  --hatch: rgba(0, 0, 0, .035);
+  --blueprint: rgba(0, 0, 0, .03);
 
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
@@ -525,9 +527,16 @@ Adjust the source path to wherever `the_LAB/html_artifacts` sits relative to thi
     --grid:
       repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 22px),
       repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 1px, transparent 1px 22px);
+    --hatch: rgba(255, 255, 255, .04);
+    --blueprint: rgba(255, 255, 255, .03);
   }
 }
 ```
+
+`--hatch` and `--blueprint` are the fourth divergence from html_artifacts. Both
+carry a texture overlay that has to invert with the scheme: a near-black overlay
+on a dark panel shifts the pixels by one or two units and the texture vanishes.
+Keeping them as tokens is what stops a color literal from living in `site.css`.
 
 - [ ] **Step 3: Commit**
 
@@ -790,7 +799,7 @@ const { name } = Astro.props;
   border: 1px solid var(--line);
   background: var(--panel-2);
   background-image: repeating-linear-gradient(
-    135deg, rgba(0,0,0,.035) 0 6px, transparent 6px 12px
+    135deg, var(--hatch) 0 6px, transparent 6px 12px
   );
   position: relative;
 }
@@ -1174,8 +1183,8 @@ The Live and Source links are derived from which URLs exist. There is no `type` 
   position: relative;
   overflow: hidden;
   background-image:
-    repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,.03) 0 1px, transparent 1px 14px);
+    repeating-linear-gradient(0deg, var(--blueprint) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, var(--blueprint) 0 1px, transparent 1px 14px);
 }
 .card--stub .thumb { border-bottom-style: dashed; }
 .thumb img {
