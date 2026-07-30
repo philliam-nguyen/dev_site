@@ -1,11 +1,16 @@
 ---
 interface Props {
   file: string;
+  active?: boolean;
 }
 
-const { file } = Astro.props;
+const { file, active = true } = Astro.props;
 ---
-<div class="stub">
-  <span class="stub-tag">Placeholder &middot; {file}</span>
+{active ? (
+  <div class="stub">
+    <span class="stub-tag">Placeholder &middot; {file}</span>
+    <slot />
+  </div>
+) : (
   <slot />
-</div>
+)}

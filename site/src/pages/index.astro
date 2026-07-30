@@ -35,12 +35,8 @@ const { Content: AboutContent } = await render(about);
 
   <section id="about">
     <SectionHead index="01" kicker="About" heading="About" />
-    {about.data.placeholder ? (
-      <Stub file="src/content/about.md">
-        <div class="prose"><AboutContent /></div>
-      </Stub>
-    ) : (
+    <Stub file="src/content/about.md" active={about.data.placeholder}>
       <div class="prose"><AboutContent /></div>
-    )}
+    </Stub>
   </section>
 </Base>
