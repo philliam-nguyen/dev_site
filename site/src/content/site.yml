@@ -1,0 +1,12 @@
+name: Phil Nguyen
+role: One line about what you do. Edit this in src/content/site.yml.
+portraitInitials: PN
+eyebrowLeft: PORTFOLIO // IT & SOFTWARE
+eyebrowRight: "2026"
+badges:
+  - text: Infrastructure
+    kind: accent
+  - text: Security
+  - text: Automation
+  - text: AI
+links: []
