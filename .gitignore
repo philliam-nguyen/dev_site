@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.astro/
+.superpowers/
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+
+# playwright
+test-results/
+playwright-report/

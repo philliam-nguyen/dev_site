@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec 0001 - Developer site</title>
+<style>@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url(data:font/woff2;base64,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) format('woff2');}</style>
+<style>/* Artifact system shared design language. Off-white + orange, light and dark.
+   Retro-tech-manual / HUD. Palette tokens are the contract from spec 0001. */
+:root {
+  --bg:#f7f5f0; --panel:#eeece4; --panel-2:#e6e3d9;
+  --ink:#22201b; --ink-dim:#6d6a61; --ink-faint:#97948a;
+  --line:#e2dfd4; --tick:#cdcabf;
+  --accent:#e8611c; --accent-soft:rgba(232,97,28,.10); --accent-border:rgba(232,97,28,.36);
+  --rec:#2f8f5b; --rec-soft:rgba(47,143,91,.10); --rec-border:rgba(47,143,91,.34);
+  --warn:#cf4b2e; --warn-soft:rgba(207,75,46,.10); --warn-border:rgba(207,75,46,.34);
+  --grid:none;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --display: "Anton", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+}
+.dark-tokens, :root[data-theme="dark"] {
+  --bg:#17181b; --panel:#202226; --panel-2:#26282c;
+  --ink:#eae8e2; --ink-dim:#97948b; --ink-faint:#6f6c64;
+  --line:#303237; --tick:#46484e;
+  --accent:#f6832f; --accent-soft:rgba(246,131,47,.12); --accent-border:rgba(246,131,47,.40);
+  --rec:#5ec98a; --rec-soft:rgba(94,201,138,.12); --rec-border:rgba(94,201,138,.40);
+  --warn:#ff6b4a; --warn-soft:rgba(255,107,74,.12); --warn-border:rgba(255,107,74,.40);
+  --grid: repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 22px),
+          repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 22px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#17181b; --panel:#202226; --panel-2:#26282c;
+    --ink:#eae8e2; --ink-dim:#97948b; --ink-faint:#6f6c64;
+    --line:#303237; --tick:#46484e;
+    --accent:#f6832f; --accent-soft:rgba(246,131,47,.12); --accent-border:rgba(246,131,47,.40);
+    --rec:#5ec98a; --rec-soft:rgba(94,201,138,.12); --rec-border:rgba(94,201,138,.40);
+    --warn:#ff6b4a; --warn-soft:rgba(255,107,74,.12); --warn-border:rgba(255,107,74,.40);
+    --grid: repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 22px),
+            repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 22px);
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin:0; min-height:100vh; color:var(--ink); line-height:1.62;
+  font-family:var(--font); font-size:16px;
+  background-color:var(--bg); background-image:var(--grid); background-attachment:fixed;
+}
+
+.theme-toggle {
+  position:fixed; top:12px; right:44px; z-index:60; width:30px; height:30px;
+  border:1px solid var(--line); background:var(--panel); color:var(--ink-dim);
+  border-radius:6px; cursor:pointer; font-size:15px; line-height:1;
+}
+.theme-toggle:hover { color:var(--accent); border-color:var(--accent-border); }
+
+.tick { position:fixed; z-index:40; color:var(--tick); font-size:13px; line-height:1; pointer-events:none; }
+.tick.tl { top:14px; left:14px; } .tick.tr { top:13px; right:14px; }
+.tick.bl { bottom:14px; left:14px; } .tick.br { bottom:14px; right:14px; }
+
+.wrap { max-width:840px; margin:0 auto; padding:56px 30px 96px; }
+
+.eyebrow { font-family:var(--mono); font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin:0 0 14px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.eyebrow .idx { color:var(--ink-faint); }
+.wordmark { font-family:var(--display); font-weight:400; font-synthesis:none; text-transform:uppercase; font-size:clamp(3rem,2rem+6vw,5rem); line-height:.86; letter-spacing:.01em; margin:0; color:var(--ink); }
+.wordmark .dot { color:var(--accent); }
+.title { font-family:var(--font); font-weight:650; font-size:clamp(1.2rem,1rem+1.2vw,1.6rem); letter-spacing:-.01em; margin:14px 0 18px; color:var(--ink); max-width:34ch; }
+
+.meta { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 16px; }
+.badge { font-family:var(--mono); font-size:.68rem; letter-spacing:.07em; text-transform:uppercase; padding:3px 9px; border:1px solid var(--line); color:var(--ink-dim); background:var(--panel); }
+.badge--accent { color:var(--accent); border-color:var(--accent-border); background:var(--accent-soft); }
+.badge--rec { color:var(--rec); border-color:var(--rec-border); background:var(--rec-soft); }
+.badge--warn { color:var(--warn); border-color:var(--warn-border); background:var(--warn-soft); }
+
+.lead { color:var(--ink-dim); max-width:68ch; }
+.resolution { border-left:3px solid var(--accent); background:var(--panel); padding:12px 16px; color:var(--ink-dim); }
+.resolution strong { color:var(--ink); }
+
+section { margin-top:40px; }
+.kicker { font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:10px; margin:0 0 14px; }
+.kicker::before { content:"\00BB"; color:var(--accent); font-size:1rem; }
+h2 { font-family:var(--display); font-weight:400; font-synthesis:none; text-transform:uppercase; font-size:1.5rem; letter-spacing:.01em; margin:0 0 14px; color:var(--ink); }
+p { margin:0 0 14px; }
+strong { color:var(--ink); font-weight:650; }
+a { color:var(--accent); }
+code { font-family:var(--mono); font-size:.85em; background:var(--panel-2); border:1px solid var(--line); border-radius:5px; padding:.08em .4em; color:var(--accent); }
+
+.block-stub { border:1px dashed var(--line); padding:14px 16px; color:var(--ink-dim); }
+
+/* ---- Progress artifact: index rail, status groups, Q&A ---- */
+.wrap--progress { max-width:920px; }
+.progress-layout { display:grid; grid-template-columns:140px 1fr; gap:36px; margin-top:22px; }
+.progress-body > details:first-child { margin-top:0; }
+.progress-rail { position:sticky; top:26px; align-self:start; display:flex; flex-direction:column; gap:12px; }
+.fold-toggle { font-family:var(--mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:7px 9px; cursor:pointer; text-align:left; }
+.fold-toggle:hover { color:var(--accent); border-color:var(--accent-border); }
+.hud-index { display:flex; flex-direction:column; gap:2px; font-family:var(--mono); font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; }
+.hud-index a { color:var(--ink-dim); text-decoration:none; padding:7px 9px; border-left:2px solid var(--line); }
+.hud-index a:hover { color:var(--accent); border-left-color:var(--accent); background:var(--accent-soft); }
+
+.strip { display:flex; gap:8px; flex-wrap:wrap; margin:2px 0 4px; }
+.strip .cell { font-family:var(--mono); font-size:.64rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-dim); border:1px solid var(--line); background:var(--panel); padding:6px 11px; }
+.strip .cell b { color:var(--accent); font-weight:700; font-size:.8rem; }
+
+ul.items { list-style:none; margin:0; padding:0; }
+ul.items > li { position:relative; padding:9px 0 9px 22px; border-bottom:1px solid var(--line); color:var(--ink-dim); }
+ul.items > li:last-child { border-bottom:0; }
+ul.items > li strong { color:var(--ink); }
+ul.items > li::before { content:"\203A"; position:absolute; left:3px; top:9px; color:var(--accent); font-weight:700; }
+
+details.fold { margin-top:30px; border-top:1px solid var(--line); }
+details.fold > summary { list-style:none; cursor:pointer; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:10px; padding:12px 0 2px; }
+details.fold > summary::-webkit-details-marker { display:none; }
+details.fold > summary::before { content:"\25B8"; color:var(--accent); transition:transform .15s ease; }
+details.fold[open] > summary::before { transform:rotate(90deg); }
+details.fold .count { margin-left:auto; color:var(--ink-faint); border:1px solid var(--line); border-radius:4px; padding:0 7px; }
+details.fold > summary + * { margin-top:14px; }
+
+.qa { border:1px solid var(--line); border-left:3px solid var(--tick); background:var(--panel); padding:14px 16px; margin:0 0 12px; }
+.qa--open { border-left-color:var(--accent); background:var(--accent-soft); }
+.qa--closed { opacity:.9; }
+.qa .q, .qa .a { position:relative; padding-left:28px; margin:0 0 9px; }
+.qa .a { margin:0; color:var(--ink-dim); }
+.qa .mark { position:absolute; left:0; top:1px; font-family:var(--mono); font-weight:700; font-size:.66rem; width:19px; height:19px; display:grid; place-items:center; border:1px solid var(--line); }
+.qa .qmark { color:var(--accent); border-color:var(--accent-border); background:var(--accent-soft); }
+.qa .amark { color:var(--rec); border-color:var(--rec-border); background:var(--rec-soft); }
+.qa .owner { font-family:var(--mono); font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-left:8px; white-space:nowrap; }
+.qa strong { color:var(--ink); }
+.quiet { color:var(--ink-dim); }
+
+:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media (max-width:640px){
+  .wrap{ padding:44px 18px 70px; }
+  .progress-layout{ grid-template-columns:1fr; gap:0; }
+  .progress-rail{ position:static; flex-direction:row; flex-wrap:wrap; align-items:center; margin-bottom:22px; }
+  .hud-index{ flex-direction:row; flex-wrap:wrap; }
+}
+@media (prefers-reduced-motion: reduce){ * { transition:none !important; } }
+</style>
+<script>(function(){try{var t=localStorage.getItem('artifact-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
+</head>
+<body>
+<button class="theme-toggle" type="button" aria-label="Toggle light and dark"
+  onclick="(function(r){var d=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',d);try{localStorage.setItem('artifact-theme',d)}catch(e){}})(document.documentElement)">&#9680;</button>
+<span class="tick tl">+</span><span class="tick tr">&#9678;</span><span class="tick bl">+</span><span class="tick br">+</span>
+
+<main class="wrap">
+<style>
+pre { font-family:var(--mono); font-size:.78rem; line-height:1.6; background:var(--panel);
+      border:1px solid var(--line); border-left:3px solid var(--tick); padding:13px 15px;
+      overflow-x:auto; margin:0 0 14px; color:var(--ink-dim); }
+pre code { background:none; border:0; padding:0; color:inherit; font-size:inherit; }
+table.grid { width:100%; border-collapse:collapse; margin:0 0 14px; font-size:.92rem; }
+table.grid th { text-align:left; font-family:var(--mono); font-size:.66rem; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--ink-faint); font-weight:400;
+      border-bottom:1px solid var(--line); padding:0 12px 8px 0; }
+table.grid td { border-bottom:1px solid var(--line); padding:9px 12px 9px 0;
+      color:var(--ink-dim); vertical-align:top; }
+table.grid td:first-child { color:var(--ink); }
+table.grid td.pass { color:var(--rec); font-family:var(--mono); font-size:.8rem; white-space:nowrap; }
+table.grid td.fail { color:var(--warn); font-family:var(--mono); font-size:.8rem; white-space:nowrap; }
+.adr-row { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; align-items:baseline;
+      padding:11px 0; border-bottom:1px solid var(--line); }
+.adr-row:first-of-type { border-top:1px solid var(--line); }
+.adr-id { font-family:var(--mono); font-size:.66rem; letter-spacing:.1em; color:var(--accent);
+      border:1px solid var(--accent-border); background:var(--accent-soft); padding:3px 7px;
+      white-space:nowrap; }
+.adr-row h3 { font-size:.98rem; font-weight:650; margin:0 0 3px; color:var(--ink); }
+.adr-row p { font-size:.88rem; color:var(--ink-dim); margin:0; }
+.adr-row .why { font-size:.85rem; color:var(--ink-faint); margin-top:4px; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:0 30px; }
+@media (max-width:640px){ .two{ grid-template-columns:1fr; } .adr-row{ grid-template-columns:1fr; } }
+</style>
+
+<header class="artifact-head">
+  <p class="eyebrow"><span>SPEC 0001 // DEVELOPER SITE</span><span class="idx">ACCEPTED</span></p>
+  <h1 class="wordmark">Spec 0001<span class="dot">.</span></h1>
+  <p class="title">A developer site on Astro, S3, and CloudFront, provisioned by Terraform</p>
+  <div class="meta">
+    <span class="badge badge--rec">Accepted</span>
+    <span class="badge badge--accent">ADR 0001&ndash;0004</span>
+    <span class="badge badge--default">2026-07-29</span>
+  </div>
+  <div class="strip">
+    <span class="cell"><b>4</b> ADRs</span>
+    <span class="cell"><b>8</b> success criteria</span>
+    <span class="cell"><b>3</b> terraform layers</span>
+    <span class="cell"><b>0</b> bytes of client JS</span>
+  </div>
+</header>
+
+<section id="overview">
+  <p class="kicker">01 &middot; Overview</p>
+  <h2>What this is</h2>
+  <p>A single-page developer site at a custom domain, built with Astro and served from S3
+  through CloudFront, with all AWS infrastructure provisioned by Terraform. The page carries a
+  header, an About section, and a &ldquo;Stuff I&rsquo;ve made&rdquo; grid of project cards. Both
+  content sections ship as skeletons and get filled in later.</p>
+  <p>The site is the hub for other projects. Some cards link to apps hosted on their own
+  subdomains, some to GitHub repositories only. This spec covers the shared platform layer and
+  the site. Each hosted app gets its own brainstorm, spec, and plan.</p>
+  <div class="resolution">
+    <strong>Scope in:</strong> the Astro site, Terraform bootstrap and platform layers, a reusable
+    <code>static-site</code> module, the portfolio stack, and the GitHub Actions deploy path.<br>
+    <strong>Scope out:</strong> the recipe app, the RAG system, the capstones, and any compute or
+    database infrastructure. The RAG system links to its repository and is not deployed.
+  </div>
+</section>
+
+<section id="decisions">
+  <p class="kicker">02 &middot; Decisions</p>
+  <h2>The four ADRs</h2>
+  <p class="lead">Each one records what was chosen, what credible alternative it beat, and why.
+  These are the study material.</p>
+
+  <div class="adr-row">
+    <span class="adr-id">ADR 0001</span>
+    <div>
+      <h3>Astro as the static site generator</h3>
+      <p>Content collections for projects, About, and header config. Zod schemas fail the build on
+      a bad entry.</p>
+      <p class="why">Beat plain HTML (no schema, hand-optimized images) and Eleventy (no image
+      pipeline). Cost: a Node toolchain for a one-page site.</p>
+    </div>
+  </div>
+
+  <div class="adr-row">
+    <span class="adr-id">ADR 0002</span>
+    <div>
+      <h3>GitHub-hosted runner with OIDC</h3>
+      <p>No stored AWS credentials. STS issues a one-hour credential per run, scoped to one bucket
+      and one distribution.</p>
+      <p class="why">Beat a self-hosted runner on the home server. OIDC works identically there, so
+      nothing technical is lost, but no constraint forces it: a 20-second build against 2,000 free
+      minutes, and nothing needs the private network. Self-hosting would add runner maintenance and
+      a fork-PR path into the home network.</p>
+    </div>
+  </div>
+
+  <div class="adr-row">
+    <span class="adr-id">ADR 0003</span>
+    <div>
+      <h3>Terraform topology and per-app subdomains</h3>
+      <p>Bootstrap, platform, modules, stacks. S3 backend with native locking. One subdomain and one
+      distribution per app.</p>
+      <p class="why">Reverses an earlier &ldquo;no child modules&rdquo; call that was right for one
+      site and wrong for four apps. Beat path-based routing on a shared distribution, which couples
+      every deploy to one resource. Beat a DynamoDB lock table, deprecated since Terraform 1.10.</p>
+    </div>
+  </div>
+
+  <div class="adr-row">
+    <span class="adr-id">ADR 0004</span>
+    <div>
+      <h3>Porting the html_artifacts visual identity</h3>
+      <p>The site becomes a second implementation of the same palette table, with three deliberate
+      divergences: font delivery, three contrast values, and no theme toggle.</p>
+      <p class="why">Beat copying <code>artifacts.css</code> wholesale, which drags in document
+      furniture the site never uses. Beat a shared npm package, more machinery than a 20-line CSS
+      block deserves.</p>
+    </div>
+  </div>
+
+  <p class="quiet" style="margin-top:16px">A fifth ADR on home-server hosting for dynamic apps was
+  drafted and then dropped. The recipe app already splits into a seeded demo with no backend, which
+  is static, and a live instance reachable only over Tailscale, which is private. Nothing public
+  needs compute, so the premise dissolved. ADR number 0005 stays retired; the next one is 0006.</p>
+</section>
+
+<section id="visual">
+  <p class="kicker">03 &middot; Visual design</p>
+  <h2>Identity</h2>
+  <p>Retro-futurist tech-manual and HUD, ported from html_artifacts spec 0001. Off-white paper,
+  orange accent, Anton condensed wordmark, JetBrains Mono for labels and chips, fixed corner ticks
+  with a reticle, a blueprint grid on dark.</p>
+  <ul class="items">
+    <li>Mono eyebrow, <strong>PORTFOLIO // IT &amp; SOFTWARE</strong> left, index right</li>
+    <li>Header: a 104px portrait panel, then the Anton wordmark carrying the name with an orange
+    period, a role line, and four badges reading <strong>Infrastructure, Security, Automation,
+    AI</strong></li>
+    <li>About: kicker, heading, prose</li>
+    <li>Stuff I&rsquo;ve made: kicker, heading, a two-column card grid</li>
+    <li>No link strip in v1. The component reads an empty list in <code>site.yml</code>, so adding
+    GitHub or email later is a content change</li>
+    <li>Theming is <code>prefers-color-scheme</code> only. No toggle, no localStorage,
+    <strong>no JavaScript in the built page</strong></li>
+  </ul>
+  <p class="quiet">Approved mockups:
+  <code>.superpowers/brainstorm/496-1785370399/content/skeleton-state.html</code></p>
+</section>
+
+<section id="architecture">
+  <p class="kicker">04 &middot; Site</p>
+  <h2>Architecture</h2>
+
+  <details class="fold" open>
+    <summary>Content model<span class="count">3 collections</span></summary>
+    <p>All schema-validated at build time. Config at <code>src/content.config.ts</code>, loaders
+    from <code>astro/loaders</code>, zod from <code>astro/zod</code>.</p>
+<pre><code>const projects = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+  schema: ({ image }) =&gt; z.object({
+    title: z.string(),
+    blurb: z.string().max(120),
+    stack: z.array(z.string()).default([]),
+    year: z.number().int(),
+    order: z.number().int(),
+    thumb: image().optional(),
+    live: z.string().url().optional(),
+    repo: z.string().url().optional(),
+    draft: z.boolean().default(false),
+    placeholder: z.boolean().default(false),
+  }).refine(d =&gt; d.live || d.repo, {
+    message: 'a project needs a live URL, a repo URL, or both',
+  }),
+});</code></pre>
+    <ul class="items">
+      <li><strong>Ordering.</strong> <code>order</code> is required, no default, no tiebreaker.
+      Number sparsely by tens so inserting means <code>15</code>, not renumbering.
+      <code>year</code> is displayed and never sorted on, which preserves leading with an older
+      project without editing its year.</li>
+      <li><strong>Link types are derived, not declared.</strong> No <code>type</code> field. A Live
+      chip appears when <code>live</code> exists, a Source chip when <code>repo</code> does, and the
+      <code>refine</code> fails the build on an entry with neither. An unfinished project omits
+      <code>live</code> and gains it in one line when it ships.</li>
+    </ul>
+  </details>
+
+  <details class="fold">
+    <summary>Components<span class="count">7</span></summary>
+    <table class="grid">
+      <tr><th>Component</th><th>Responsibility</th></tr>
+      <tr><td>Base.astro</td><td>Document shell and head</td></tr>
+      <tr><td>Hud.astro</td><td>Corner ticks and reticle, aria-hidden</td></tr>
+      <tr><td>Eyebrow.astro</td><td>Mono kicker with right-aligned index</td></tr>
+      <tr><td>Wordmark.astro</td><td>Anton name and the orange period</td></tr>
+      <tr><td>SectionHead.astro</td><td>The kicker and h2 pair</td></tr>
+      <tr><td>ProjectCard.astro</td><td>One card, populated or stub</td></tr>
+      <tr><td>Stub.astro</td><td>Dashed placeholder naming the file that replaces it</td></tr>
+    </table>
+    <p><code>index.astro</code> composes them and holds no styling.
+    <code>sortProjects.ts</code> filters drafts and sorts by <code>order</code>.</p>
+  </details>
+
+  <details class="fold">
+    <summary>Styles and the skeleton state<span class="count">2 files</span></summary>
+    <p><code>tokens.css</code> holds the ported palette, the <code>prefers-color-scheme</code>
+    override, and the Anton <code>@font-face</code>, and nothing else. <code>site.css</code> holds
+    layout: the wrap, header grid, portrait panel, card grid, responsive collapse. Keeping them
+    separate is what makes the token contract legible rather than a claim.</p>
+    <p>The skeleton uses two mechanisms, neither a separate render path:</p>
+    <ul class="items">
+      <li>A <code>placeholder</code> boolean shared by <code>about.md</code> and the seed project
+      entries. When true, <code>Stub.astro</code> wraps the content in the dashed
+      <code>.block-stub</code> frame and prints the file that replaces it. Deleting the flag deletes
+      the treatment.</li>
+      <li>A missing <code>thumb</code> renders the blueprint panel and a mono
+      &ldquo;no image yet&rdquo; label. This keys off the absent field rather than the flag, so a
+      real project without a screenshot degrades the same way instead of looking broken.</li>
+    </ul>
+  </details>
+</section>
+
+<section id="infra">
+  <p class="kicker">05 &middot; Infrastructure</p>
+  <h2>Terraform</h2>
+  <p>Everything in <code>us-east-1</code>, single provider, no alias. ACM for CloudFront must live
+  there and nothing else here is region-sensitive, so pinning removes an alias and a common class of
+  &ldquo;certificate not found&rdquo; errors.</p>
+<pre><code>infra/
+├── bootstrap/          local state, run once by hand
+├── platform/           zone lookup, ACM cert, OIDC provider, budget alarm
+├── modules/
+│   ├── static-site/    bucket + OAC + distribution + record + deploy role
+│   └── lambda-app/     (later)
+└── stacks/
+    ├── portfolio/
+    └── &lt;app&gt;/          one thin root module per app</code></pre>
+
+  <details class="fold">
+    <summary>bootstrap and platform<span class="count">applied by hand</span></summary>
+    <ul class="items">
+      <li><strong>bootstrap.</strong> Local state. Creates the state bucket with versioning, SSE,
+      public access blocked, and <code>prevent_destroy</code>. Its
+      <code>terraform.tfstate</code> is a real file on disk and must be gitignored.</li>
+      <li><strong>Zone.</strong> <code>data "aws_route53_zone"</code> looking it up by name. Never
+      creates it, so no plan can touch the NS records.</li>
+      <li><strong>Certificate.</strong> Apex as <code>domain_name</code>, <code>*.domain</code> as a
+      SAN, because a wildcard does not match the apex.</li>
+      <li><strong>OIDC provider</strong> for <code>token.actions.githubusercontent.com</code>,
+      thumbprint from <code>data.tls_certificate</code> rather than a pasted hex string.</li>
+      <li><strong>Budget alarm</strong> at a low monthly threshold. This is the deliberate
+      observability choice: CloudFront access logs would cost S3 storage and go unread, while a
+      budget alarm reports the one thing that matters on a free-tier account.</li>
+    </ul>
+  </details>
+
+  <details class="fold">
+    <summary>The static-site module<span class="count">reused later</span></summary>
+    <ul class="items">
+      <li>Bucket with all four public access block flags true and ownership controls set to
+      <code>BucketOwnerEnforced</code>, so ACLs are off entirely.</li>
+      <li><strong>Origin Access Control</strong>, not the legacy OAI. The bucket policy grants
+      <code>s3:GetObject</code> to <code>cloudfront.amazonaws.com</code> only, conditioned on
+      <code>AWS:SourceArn</code> matching this distribution. That condition is what stops any other
+      distribution in any account from reading the bucket.</li>
+      <li>Distribution with <code>default_root_object</code>, redirect-to-https, compression, the
+      managed CachingOptimized policy, and <code>PriceClass_100</code>.</li>
+      <li>A response headers policy carrying HSTS, <code>X-Content-Type-Options</code>,
+      <code>Referrer-Policy</code>, and a CSP.</li>
+      <li>A CloudFront Function issuing a 301 from <code>www</code> to the apex.</li>
+      <li>Route 53 A and AAAA alias records using the distribution&rsquo;s own
+      <code>hosted_zone_id</code> attribute, not the hardcoded <code>Z2FDTNDATAQYW2</code> half the
+      tutorials paste in.</li>
+      <li>A deploy role assumable only through OIDC, scoped to three S3 actions on one bucket and
+      <code>cloudfront:CreateInvalidation</code> on one distribution.</li>
+    </ul>
+  </details>
+</section>
+
+<section id="deploy">
+  <p class="kicker">06 &middot; Deploy</p>
+  <h2>Push to main</h2>
+  <p><strong>Terraform does not run in CI.</strong> Static analysis does, because it needs no
+  credentials. Plan and apply stay local and manual.</p>
+<pre><code>on:
+  push:
+    branches: [main]
+    paths: ['site/**', '.github/workflows/deploy.yml']
+  workflow_dispatch:
+concurrency: { group: deploy, cancel-in-progress: false }
+jobs:
+  deploy:
+    permissions: { id-token: write, contents: read }</code></pre>
+  <ul class="items">
+    <li>Steps: <code>npm ci</code>, <code>astro check</code>, <code>astro build</code>, assume role,
+    sync, invalidate.</li>
+    <li><strong>Two sync passes, and the order is load-bearing.</strong> Hashed assets first with
+    <code>max-age=31536000, immutable</code>; HTML second with
+    <code>max-age=0, must-revalidate</code>. HTML uploaded before the files it references produces a
+    page that 404s on its own stylesheet for the length of the second pass.</li>
+    <li>Invalidation uses <code>/*</code>, which counts as one path against the 1,000 free paths per
+    month.</li>
+    <li>The role ARN lives in a repository variable, not a secret and not hardcoded, so the same
+    workflow shape drops into later app stacks with one value changed.</li>
+    <li><code>cancel-in-progress: false</code>, because killing a half-finished sync leaves the
+    bucket in a mixed state.</li>
+  </ul>
+</section>
+
+<section id="verification">
+  <p class="kicker">07 &middot; Verification</p>
+  <h2>How you know it works</h2>
+
+  <details class="fold" open>
+    <summary>What the build already guarantees<span class="count">free</span></summary>
+    <p>The zod schema fails <code>astro build</code> on a malformed entry, including the
+    <code>refine</code> rejecting a project with no links. <code>astro check</code> catches type
+    errors. That is most of the correctness surface, at zero test code.</p>
+  </details>
+
+  <details class="fold">
+    <summary>What gets a test, and what does not<span class="count">1 unit</span></summary>
+    <ul class="items">
+      <li><strong>Tested:</strong> <code>sortProjects()</code>. Drafts excluded, <code>order</code>
+      respected. A sort that silently breaks is invisible in review, which is the whole argument.</li>
+      <li><strong>Not tested:</strong> component rendering. Asserting that
+      <code>ProjectCard</code> renders the title it was passed tests Astro, not this code.</li>
+      <li><strong>Not used:</strong> Terratest. Fifteen resources with one consumer, already proven
+      by the checks below.</li>
+      <li><strong>Automated:</strong> Playwright with <code>@axe-core/playwright</code> in both
+      themes, protecting the contrast decisions from a future token edit. Playwright rather than
+      the axe CLI because verifying dark mode needs
+      <code>emulateMedia({ colorScheme: 'dark' })</code>. The same suite asserts the built page
+      loads no JavaScript.</li>
+      <li><strong>In CI:</strong> <code>terraform fmt -check</code>, <code>validate</code>, and
+      <code>tfsec</code>. No credentials, no state.</li>
+    </ul>
+  </details>
+
+  <details class="fold">
+    <summary>Infrastructure checks, run by hand after apply<span class="count">6</span></summary>
+<pre><code>curl -sI https://&lt;domain&gt;                     # 200, HSTS present
+curl -sI http://&lt;domain&gt;                      # 301 to https
+curl -sI https://www.&lt;domain&gt;                 # 301 to apex
+curl -sI https://&lt;bucket&gt;.s3.amazonaws.com/index.html   # 403
+aws s3api get-public-access-block --bucket &lt;name&gt;        # all four true
+dig +short &lt;domain&gt;                           # CloudFront edges</code></pre>
+    <div class="resolution">The <strong>403</strong> is the one to run twice. It separates
+    &ldquo;the site works&rdquo; from &ldquo;the site works and the bucket is not readable by anyone
+    else,&rdquo; and it is the check people skip.</div>
+  </details>
+
+  <details class="fold">
+    <summary>Contrast, measured<span class="count">3 overrides</span></summary>
+    <table class="grid">
+      <tr><th>Token on its bg</th><th>Light</th><th>Dark</th></tr>
+      <tr><td>--ink-dim</td><td class="pass">4.97:1 pass</td><td class="pass">5.80:1 pass</td></tr>
+      <tr><td>--accent</td><td class="fail">3.13:1 fail</td><td class="pass">6.93:1 pass</td></tr>
+      <tr><td>--ink-faint</td><td class="fail">2.81:1 fail</td><td class="fail">3.38:1 fail</td></tr>
+    </table>
+    <p>Neither one is fixed by changing its value.</p>
+    <ul class="items">
+      <li><strong><code>--accent</code></strong> also carries the wordmark period, the kicker marks,
+      the list chevrons, and the accent borders, none of which are text. Darkening it to clear AA
+      would dull all of that to fix one use. The site keeps <code>#e8611c</code> and adds
+      <strong><code>--accent-text</code></strong> at <code>#b84a10</code> (4.79:1) for links and
+      accent-colored text. Dark needs no change.</li>
+      <li><strong><code>--ink-faint</code></strong> cannot be fixed by value at all. Clearing AA on
+      this background lands around <code>#6f6c62</code>, and <code>--ink-dim</code> is
+      <code>#6d6a61</code>. They collapse into one color. So the value stays and the
+      <strong>usage</strong> changes: text moves to <code>--ink-dim</code>, and
+      <code>--ink-faint</code> survives for non-text ornament.</li>
+    </ul>
+    <p class="quiet">html_artifacts spec 0001 stays unchanged by your decision, so existing artifacts
+    do not shift. Recorded in ADR 0004.</p>
+  </details>
+</section>
+
+<section id="criteria">
+  <p class="kicker">08 &middot; Acceptance</p>
+  <h2>Success criteria</h2>
+  <ul class="items">
+    <li><code>https://&lt;domain&gt;</code> serves the page over HTTPS with <strong>HSTS</strong>
+    present</li>
+    <li>The direct S3 URL returns <strong>403</strong></li>
+    <li>A push to <code>main</code> touching <code>site/</code> deploys with
+    <strong>no stored AWS credential</strong></li>
+    <li>Adding one markdown file to <code>src/content/projects/</code> produces one card, with no
+    other edit</li>
+    <li>The skeleton state renders as deliberately unfinished and names the files that replace it</li>
+    <li>Light and dark both pass axe with <strong>zero violations</strong></li>
+    <li>The built output contains <strong>no JavaScript</strong></li>
+    <li><code>terraform plan</code> on a clean tree reports <strong>no changes</strong></li>
+  </ul>
+</section>
+
+<section id="prereqs">
+  <p class="kicker">09 &middot; Before anything runs</p>
+  <h2>Manual prerequisites</h2>
+  <ul class="items">
+    <li><strong>Register the domain.</strong> Route 53 creates the hosted zone automatically;
+    another registrar means creating the zone and repointing nameservers.</li>
+    <li><strong><code>git init</code></strong> and create the GitHub repository, public. The repo
+    name and owner get baked into the OIDC trust policy.</li>
+    <li>An AWS account with a local admin-capable profile for the bootstrap, platform, and portfolio
+    applies.</li>
+    <li>Node 20 or newer.</li>
+    <li><strong>Terraform 1.10 or newer</strong>, required for <code>use_lockfile</code>.</li>
+  </ul>
+</section>
+
+<details class="fold" id="future">
+  <summary>Known future directions<span class="count">4</span></summary>
+  <p class="quiet">Recorded so the current design does not fight them. None are in scope.</p>
+  <ul class="items">
+    <li>Hosted apps at their own subdomains, consuming platform outputs (ADR 0003).</li>
+    <li>The recipe app&rsquo;s <strong>demo mode</strong> (seeded data, no backend) as the second
+    consumer of <code>static-site</code>. That is the real test of whether the module&rsquo;s
+    boundaries are right, since a module with one consumer is a guess.</li>
+    <li>A <code>lambda-app</code> module alongside <code>static-site</code> if a public serverless
+    app ever arrives. Nothing currently planned needs one.</li>
+    <li>A scheduled link checker once project entries carry external URLs worth rotting.</li>
+  </ul>
+</details>
+
+<details class="fold" id="split">
+  <summary>Implementation split<span class="count">2 plans</span></summary>
+  <p>The site gets a normal implementation plan, executed for you. The infrastructure gets a
+  <strong>teaching curriculum</strong> you drive: the trade-off space covered before each piece is
+  written, quiz checkpoints, two to three sessions. Then a separate pass walking the completed work
+  and quizzing you on it, framed as interview prep.</p>
+</details>
+
+</main>
+</body>
+</html>
