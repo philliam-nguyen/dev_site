@@ -52,3 +52,121 @@ code {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+
+/* ---- header ---- */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin: 0 0 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.eyebrow .idx { color: var(--ink-dim); }
+
+.head {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 0 26px;
+  align-items: start;
+}
+
+.portrait {
+  width: 104px;
+  height: 120px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  background-image: repeating-linear-gradient(
+    135deg, rgba(0,0,0,.035) 0 6px, transparent 6px 12px
+  );
+  position: relative;
+}
+.portrait span {
+  position: absolute;
+  bottom: 6px;
+  left: 7px;
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 400;
+  font-synthesis: none;
+  text-transform: uppercase;
+  font-size: clamp(2.6rem, 1.6rem + 4vw, 4.4rem);
+  line-height: .86;
+  letter-spacing: .01em;
+  margin: -8px 0 0;
+  color: var(--ink);
+}
+.wordmark .dot { color: var(--accent); }
+
+.role {
+  font-weight: 650;
+  font-size: clamp(1.05rem, .95rem + .6vw, 1.32rem);
+  letter-spacing: -.01em;
+  margin: 14px 0 16px;
+  max-width: 34ch;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+}
+.badge {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  background: var(--panel);
+}
+.badge--accent {
+  color: var(--accent-text);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+.badge--rec {
+  color: var(--rec);
+  border-color: var(--rec-border);
+  background: var(--rec-soft);
+}
+.badge--warn {
+  color: var(--warn);
+  border-color: var(--warn-border);
+  background: var(--warn-soft);
+}
+
+.links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.links a {
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 6px 11px;
+  text-decoration: none;
+}
+.links a:hover {
+  color: var(--accent-text);
+  border-color: var(--accent-border);
+}

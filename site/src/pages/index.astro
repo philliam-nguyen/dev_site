@@ -1,10 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Wordmark from '../components/Wordmark.astro';
 import { getEntry } from 'astro:content';
 
 const site = await getEntry('site', 'site');
 if (!site) throw new Error('src/content/site.yml is missing');
+const { name, role, portraitInitials, eyebrowLeft, eyebrowRight, badges, links } = site.data;
 ---
-<Base title={site.data.name} description={site.data.role}>
-  <p>shell</p>
+<Base title={name} description={role}>
+  <Eyebrow left={eyebrowLeft} right={eyebrowRight} />
+
+  <header class="head">
+    <div class="portrait"><span>{portraitInitials}</span></div>
+    <div>
+      <Wordmark name={name} />
+      <p class="role">{role}</p>
+      <div class="meta">
+        {badges.map(b => <span class={`badge badge--${b.kind}`}>{b.text}</span>)}
+      </div>
+      {links.length > 0 && (
+        <div class="links">
+          {links.map(l => <a href={l.href}>{l.label}</a>)}
+        </div>
+      )}
+    </div>
+  </header>
 </Base>

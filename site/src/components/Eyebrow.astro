@@ -1,0 +1,12 @@
+---
+interface Props {
+  left: string;
+  right?: string;
+}
+
+const { left, right } = Astro.props;
+---
+<p class="eyebrow">
+  <span>{left}</span>
+  {right && <span class="idx">{right}</span>}
+</p>
