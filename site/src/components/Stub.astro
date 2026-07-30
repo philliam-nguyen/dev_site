@@ -1,0 +1,11 @@
+---
+interface Props {
+  file: string;
+}
+
+const { file } = Astro.props;
+---
+<div class="stub">
+  <span class="stub-tag">Placeholder &middot; {file}</span>
+  <slot />
+</div>

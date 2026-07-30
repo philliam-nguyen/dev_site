@@ -170,3 +170,60 @@ code {
   color: var(--accent-text);
   border-color: var(--accent-border);
 }
+
+/* ---- sections ---- */
+
+section { margin-top: 44px; }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.kicker::before {
+  content: "\00BB";
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-synthesis: none;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  letter-spacing: .01em;
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+
+.prose p {
+  margin: 0 0 14px;
+  max-width: 68ch;
+  color: var(--ink-dim);
+}
+.prose strong { color: var(--ink); font-weight: 650; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* ---- placeholder frame ---- */
+
+.stub {
+  border: 1px dashed var(--line);
+  padding: 16px 18px;
+  color: var(--ink-dim);
+}
+.stub-tag {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: block;
+  margin-bottom: 9px;
+}
