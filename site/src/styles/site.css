@@ -81,7 +81,7 @@ code {
   border: 1px solid var(--line);
   background: var(--panel-2);
   background-image: repeating-linear-gradient(
-    135deg, rgba(0,0,0,.035) 0 6px, transparent 6px 12px
+    135deg, var(--hatch) 0 6px, transparent 6px 12px
   );
   position: relative;
 }
