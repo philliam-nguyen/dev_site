@@ -312,7 +312,7 @@ during implementation before the site ships.
 2. `git init` and create the GitHub repository, public.
 3. An AWS account with a local admin-capable profile for the bootstrap, platform,
    and portfolio applies.
-4. Node 20 or newer.
+4. Node 22.12 or newer, required by Astro 7.
 5. Terraform 1.10 or newer, required for `use_lockfile`.
 
 ## Implementation split

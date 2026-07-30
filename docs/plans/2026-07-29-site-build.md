@@ -12,12 +12,12 @@ feature: site-build
 
 **Architecture:** One page composed of small single-responsibility `.astro` components. All content lives in schema-validated collections under `src/content/`, so publishing is a content edit and a malformed entry is a build failure. Styling splits into `tokens.css` (the ported design-system contract) and `site.css` (local layout). The built page ships zero client JavaScript.
 
-**Tech Stack:** Astro 5, TypeScript, vitest for the one pure function, Playwright plus `@axe-core/playwright` for accessibility.
+**Tech Stack:** Astro 7, TypeScript, vitest for the one pure function, Playwright plus `@axe-core/playwright` for accessibility.
 
 ## Global Constraints
 
 - Everything lives under `site/`. Terraform is out of scope for this plan.
-- Node 20 or newer.
+- Node 22.12 or newer. Required by Astro 7; Node 18 and 20 support was dropped in v6.
 - The built output must contain **zero** JavaScript. No client directives, no inline scripts, no theme toggle.
 - Theming is `prefers-color-scheme` only. No `data-theme` attribute, no `localStorage`.
 - `tokens.css` contains only palette, `@font-face`, and the dark override. Layout rules go in `site.css`. Never mix.
@@ -80,12 +80,12 @@ playwright-report/
     "test:a11y": "playwright test"
   },
   "dependencies": {
-    "astro": "^5.0.0"
+    "astro": "^7.0.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.0",
     "typescript": "^5.6.0",
-    "vitest": "^2.1.0"
+    "vitest": "^4.0.0"
   }
 }
 ```
