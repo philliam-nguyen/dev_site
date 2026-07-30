@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  index: number;
+}
+
+const { entry, index } = Astro.props;
+const { title, blurb, stack, year, thumb, live, repo, placeholder } = entry.data;
+const idx = String(index).padStart(2, '0');
+---
+<article class:list={['card', { 'card--stub': placeholder }]}>
+  <div class="thumb">
+    {thumb
+      ? <Image src={thumb} alt="" width={640} height={360} loading="lazy" />
+      : <em class="thumb-empty">no image yet</em>
+    }
+    <i class="thumb-idx" aria-hidden="true">{idx}</i>
+  </div>
+  <div class="card-body">
+    <h3>{title}</h3>
+    <p class="blurb">{blurb}</p>
+    <div class="chips">
+      {stack.map(s => <span class="chip">{s}</span>)}
+      <span class="chip chip--year">{year}</span>
+    </div>
+    {(live || repo) && (
+      <div class="card-links">
+        {live && <a href={live} class="card-link card-link--live">Live</a>}
+        {repo && <a href={repo} class="card-link">Source</a>}
+      </div>
+    )}
+  </div>
+</article>

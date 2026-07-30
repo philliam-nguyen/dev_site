@@ -227,3 +227,115 @@ h2 {
   display: block;
   margin-bottom: 9px;
 }
+
+/* ---- project cards ---- */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+.card--stub {
+  border-style: dashed;
+  background: transparent;
+}
+
+.thumb {
+  aspect-ratio: 16 / 9;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  background-image:
+    repeating-linear-gradient(0deg, var(--blueprint) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, var(--blueprint) 0 1px, transparent 1px 14px);
+}
+.card--stub .thumb { border-bottom-style: dashed; }
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.thumb-idx {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  color: var(--accent-text);
+}
+.thumb-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.card-body {
+  padding: 13px 15px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.card-body h3 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin: 0;
+  letter-spacing: -.005em;
+  color: var(--ink);
+}
+.blurb {
+  font-size: .86rem;
+  color: var(--ink-dim);
+  margin: 0 0 7px;
+  line-height: 1.5;
+}
+
+.chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chip {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  padding: 2px 6px;
+}
+.chip--year { font-variant-numeric: tabular-nums; }
+
+.card-links { display: flex; gap: 8px; margin-top: 10px; }
+.card-link {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  padding: 3px 8px;
+  text-decoration: none;
+}
+.card-link:hover { color: var(--accent-text); border-color: var(--accent-border); }
+.card-link--live {
+  color: var(--accent-text);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+
+.grid + .stub { margin-top: 18px; }
+.stub-note { margin: 0; font-size: .88rem; }
