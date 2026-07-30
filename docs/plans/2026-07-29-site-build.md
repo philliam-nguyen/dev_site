@@ -951,7 +951,7 @@ git commit -m "Task 6: header with eyebrow, wordmark, badges"
 
 **Interfaces:**
 - Consumes: the `about` collection entry from Task 3
-- Produces: `SectionHead` accepting `{ index: string; kicker: string; heading: string; id?: string }`, `Stub` accepting `{ file: string }` and wrapping a default slot
+- Produces: `SectionHead` accepting `{ index: string; kicker: string; heading: string; id?: string }`, `Stub` accepting `{ file: string; active?: boolean }` and wrapping a default slot when `active`, passing it through untouched otherwise
 
 - [ ] **Step 1: Create `site/src/components/SectionHead.astro`**
 
@@ -976,15 +976,24 @@ const { index, kicker, heading, id } = Astro.props;
 ---
 interface Props {
   file: string;
+  active?: boolean;
 }
 
-const { file } = Astro.props;
+const { file, active = true } = Astro.props;
 ---
-<div class="stub">
-  <span class="stub-tag">Placeholder &middot; {file}</span>
+{active ? (
+  <div class="stub">
+    <span class="stub-tag">Placeholder &middot; {file}</span>
+    <slot />
+  </div>
+) : (
   <slot />
-</div>
+)}
 ```
+
+`active` is what keeps the call site from writing its content twice. Without it,
+every caller needs a ternary with the same markup in both branches, and the two
+copies drift the first time one of them changes.
 
 - [ ] **Step 3: Append the section and stub rules to `site/src/styles/site.css`**
 
@@ -1070,13 +1079,9 @@ Add this section after the closing `</header>`:
 ```astro
   <section id="about">
     <SectionHead index="01" kicker="About" heading="About" />
-    {about.data.placeholder ? (
-      <Stub file="src/content/about.md">
-        <div class="prose"><AboutContent /></div>
-      </Stub>
-    ) : (
+    <Stub file="src/content/about.md" active={about.data.placeholder}>
       <div class="prose"><AboutContent /></div>
-    )}
+    </Stub>
   </section>
 ```
 
@@ -1265,7 +1270,15 @@ The Live and Source links are derived from which URLs exist. There is no `type` 
   border-color: var(--accent-border);
   background: var(--accent-soft);
 }
+
+.grid + .stub { margin-top: 18px; }
+.stub-note { margin: 0; font-size: .88rem; }
 ```
+
+The `.grid + .stub` sibling selector is what keeps the spacing in the stylesheet
+instead of an inline `style` attribute on the call site. `Stub` from Task 7 is
+already imported in `index.astro`, so the grid note reuses it rather than
+hand-writing a second copy of the same markup.
 
 - [ ] **Step 3: Update `site/src/pages/index.astro`**
 
@@ -1293,11 +1306,12 @@ Add this section after the About section:
       {projects.map((entry, i) => <ProjectCard entry={entry} index={i + 1} />)}
     </div>
     {allPlaceholder && (
-      <div class="stub" style="margin-top:16px">
-        <span class="stub-tag">Placeholder &middot; src/content/projects/</span>
-        Drop a markdown file per project in this folder. Each one becomes a card.
-        Delete these stubs once you have real entries.
-      </div>
+      <Stub file="src/content/projects/">
+        <p class="stub-note">
+          Drop a markdown file per project in this folder. Each one becomes a
+          card. Delete these stubs once you have real entries.
+        </p>
+      </Stub>
     )}
   </section>
 ```
