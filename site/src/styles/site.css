@@ -1,0 +1,54 @@
+/* Layout for this site. Design tokens live in tokens.css and are never
+   redefined here. */
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  line-height: 1.62;
+  font-family: var(--font);
+  font-size: 16px;
+  background-color: var(--bg);
+  background-image: var(--grid);
+  background-attachment: fixed;
+}
+
+.tick {
+  position: fixed;
+  z-index: 40;
+  color: var(--tick);
+  font-size: 13px;
+  line-height: 1;
+  pointer-events: none;
+}
+.tick.tl { top: 14px; left: 14px; }
+.tick.tr { top: 13px; right: 14px; }
+.tick.bl { bottom: 14px; left: 14px; }
+.tick.br { bottom: 14px; right: 14px; }
+
+.wrap {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 56px 30px 96px;
+}
+
+a { color: var(--accent-text); }
+
+code {
+  font-family: var(--mono);
+  font-size: .85em;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: .08em .4em;
+  color: var(--accent-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

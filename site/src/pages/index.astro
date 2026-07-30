@@ -1,12 +1,10 @@
 ---
+import Base from '../layouts/Base.astro';
+import { getEntry } from 'astro:content';
+
+const site = await getEntry('site', 'site');
+if (!site) throw new Error('src/content/site.yml is missing');
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Scaffold</title>
-  </head>
-  <body>
-    <p>scaffold</p>
-  </body>
-</html>
+<Base title={site.data.name} description={site.data.role}>
+  <p>shell</p>
+</Base>
