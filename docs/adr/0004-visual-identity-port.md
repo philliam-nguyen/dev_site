@@ -63,7 +63,7 @@ what axe measured against real composited pixels, not computed:
 
 | `--accent-text` on | `#b84a10` | `#a8430e` |
 |---|---|---|
-| `--bg` | 4.79:1 pass | pass |
+| `--bg` | 4.79:1 pass | pass, not re-measured |
 | `--accent-soft` over `--panel` (`.badge--accent`) | **4.28:1 fail** | **4.96:1 pass** |
 | `--panel-2` (inline `code`) | **4.06:1 fail** | **4.70:1 pass** |
 

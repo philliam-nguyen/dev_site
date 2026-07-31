@@ -1472,15 +1472,31 @@ for (const colorScheme of ['light', 'dark'] as const) {
 test('the built page ships no JavaScript', async ({ page }) => {
   const scripts: string[] = [];
   page.on('response', r => {
-    if (r.url().endsWith('.js')) scripts.push(r.url());
+    // .mjs counts, and a query string must not hide a .js
+    if (/\.m?js(\?|$)/.test(r.url())) scripts.push(r.url());
   });
   await page.goto('/');
+
   const inline = await page.locator('script').count();
+  // An on* attribute runs JavaScript without a <script> tag existing.
+  const handlers = await page.evaluate(() =>
+    [...document.querySelectorAll('*')]
+      .flatMap(el => [...el.attributes])
+      .filter(a => a.name.startsWith('on'))
+      .map(a => a.name)
+  );
 
   expect(scripts).toEqual([]);
   expect(inline).toBe(0);
+  expect(handlers).toEqual([]);
 });
 ```
+
+`endsWith('.js')` would miss a module bundle or a cache-busted URL, and counting
+`<script>` elements alone would miss an inline handler attribute. The site claims
+to ship no JavaScript at all, so the gate should be able to substantiate that
+rather than a common case of it. `handlers` collects attribute names rather than
+a count so a failure says which attribute it found.
 
 - [ ] **Step 4: Run it**
 
