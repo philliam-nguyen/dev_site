@@ -343,6 +343,12 @@ h2 {
 /* ---- narrow ---- */
 
 @media (max-width: 640px) {
+  /* The fixed corner ticks sit 14px from each edge and extend to about 23px.
+     At 375px the content column starts at x=18, so they overlap it by 5 to 7px,
+     measured in Chromium. Decorative furniture is the right thing to drop at
+     phone size rather than spending content width to clear it. */
+  .tick { display: none; }
+
   .wrap { padding: 44px 18px 70px; }
 
   .head {
