@@ -339,3 +339,27 @@ h2 {
 
 .grid + .stub { margin-top: 18px; }
 .stub-note { margin: 0; font-size: .88rem; }
+
+/* ---- narrow ---- */
+
+@media (max-width: 640px) {
+  .wrap { padding: 44px 18px 70px; }
+
+  .head {
+    grid-template-columns: 1fr;
+    gap: 18px 0;
+  }
+  .portrait { width: 88px; height: 100px; }
+
+  .grid { grid-template-columns: 1fr; }
+
+  .eyebrow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
