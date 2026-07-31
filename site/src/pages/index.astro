@@ -5,8 +5,7 @@ import Wordmark from '../components/Wordmark.astro';
 import SectionHead from '../components/SectionHead.astro';
 import Stub from '../components/Stub.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { getEntry, render } from 'astro:content';
-import { getCollection } from 'astro:content';
+import { getEntry, getCollection, render } from 'astro:content';
 import { sortProjects } from '../lib/sortProjects';
 
 const site = await getEntry('site', 'site');
@@ -18,7 +17,7 @@ if (!about) throw new Error('src/content/about.md is missing');
 const { Content: AboutContent } = await render(about);
 
 const projects = sortProjects(await getCollection('projects'));
-const allPlaceholder = projects.length > 0 && projects.every(p => p.data.placeholder);
+const allPlaceholder = projects.every(p => p.data.placeholder);
 ---
 <Base title={name} description={role}>
   <Eyebrow left={eyebrowLeft} right={eyebrowRight} />
