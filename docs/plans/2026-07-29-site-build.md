@@ -486,7 +486,7 @@ Adjust the source path to wherever `the_LAB/html_artifacts` sits relative to thi
   --line: #e2dfd4;
   --tick: #cdcabf;
   --accent: #e8611c;
-  --accent-text: #b84a10;
+  --accent-text: #a8430e;
   --accent-soft: rgba(232, 97, 28, .10);
   --accent-border: rgba(232, 97, 28, .36);
   --rec: #2f8f5b;

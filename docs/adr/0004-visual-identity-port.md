@@ -51,10 +51,25 @@ Neither failure is fixed by changing the token's value, for different reasons.
 `--accent` is the link color, but it also carries the wordmark period, the `»`
 kicker marks, the `›` list chevrons, and the accent borders, none of which are
 text and none of which need to change. Darkening it to clear 4.5:1 means roughly
-`#b84a10`, which dulls all of that furniture to fix one use. So the site keeps
-`--accent` at `#e8611c` and adds **`--accent-text`** at `#b84a10` (4.79:1),
-used only where accent-colored text appears. Dark mode sets both to `#f6832f`,
-which already measures 6.93:1.
+a darker brown, which dulls all of that furniture to fix one use. So the site
+keeps `--accent` at `#e8611c` and adds **`--accent-text`** at `#a8430e`, used
+only where accent-colored text appears. Dark mode sets both to `#f6832f`, which
+already measures 6.93:1.
+
+The light value was wrong the first time. It was set to `#b84a10` on a hand
+calculation against `--bg` alone (4.79:1), which ignored the two darker surfaces
+the token also sits on. The axe suite from Task 10 caught both. Ratios below are
+what axe measured against real composited pixels, not computed:
+
+| `--accent-text` on | `#b84a10` | `#a8430e` |
+|---|---|---|
+| `--bg` | 4.79:1 pass | pass |
+| `--accent-soft` over `--panel` (`.badge--accent`) | **4.28:1 fail** | **4.96:1 pass** |
+| `--panel-2` (inline `code`) | **4.06:1 fail** | **4.70:1 pass** |
+
+The lesson worth keeping: a contrast value is only verified against the specific
+background it was checked on. Checking one and generalizing is how both failures
+got in.
 
 `--ink-faint` cannot be fixed by value at all. Clearing 4.5:1 on `#f7f5f0`
 requires about `#6f6c62`, and `--ink-dim` is `#6d6a61`. The two collapse into one
