@@ -1286,16 +1286,28 @@ Add these imports:
 
 ```ts
 import ProjectCard from '../components/ProjectCard.astro';
-import { getCollection } from 'astro:content';
 import { sortProjects } from '../lib/sortProjects';
+```
+
+`getCollection` joins the existing `astro:content` import rather than adding a
+second statement from the same module, so the line becomes:
+
+```ts
+import { getEntry, getCollection, render } from 'astro:content';
 ```
 
 Add this to the frontmatter:
 
 ```ts
 const projects = sortProjects(await getCollection('projects'));
-const allPlaceholder = projects.length > 0 && projects.every(p => p.data.placeholder);
+const allPlaceholder = projects.every(p => p.data.placeholder);
 ```
+
+No `projects.length > 0` guard. `[].every()` returns true, which is the behavior
+you want: an empty collection should show the note telling you where to put
+project files. Guarding against the empty case hides the guidance in exactly the
+situation that needs it, which is what happens if someone deletes the seed stubs
+before writing real entries.
 
 Add this section after the About section:
 
