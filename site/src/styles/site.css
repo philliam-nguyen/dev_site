@@ -49,7 +49,7 @@ code {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-text);
   outline-offset: 3px;
 }
 
@@ -137,16 +137,6 @@ code {
   color: var(--accent-text);
   border-color: var(--accent-border);
   background: var(--accent-soft);
-}
-.badge--rec {
-  color: var(--rec);
-  border-color: var(--rec-border);
-  background: var(--rec-soft);
-}
-.badge--warn {
-  color: var(--warn);
-  border-color: var(--warn-border);
-  background: var(--warn-soft);
 }
 
 .links {
@@ -279,7 +269,6 @@ h2 {
   inset: 0;
   display: grid;
   place-items: center;
-  font-style: normal;
   font-family: var(--mono);
   font-size: .62rem;
   letter-spacing: .14em;
@@ -362,6 +351,7 @@ h2 {
   .eyebrow {
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 4px;
   }
 }

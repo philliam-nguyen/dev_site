@@ -3,10 +3,9 @@ interface Props {
   index: string;
   kicker: string;
   heading: string;
-  id?: string;
 }
 
-const { index, kicker, heading, id } = Astro.props;
+const { index, kicker, heading } = Astro.props;
 ---
 <p class="kicker">{index} &middot; {kicker}</p>
-<h2 id={id}>{heading}</h2>
+<h2>{heading}</h2>

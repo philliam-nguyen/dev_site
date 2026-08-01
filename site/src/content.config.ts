@@ -12,11 +12,11 @@ const site = defineCollection({
     eyebrowRight: z.string(),
     badges: z.array(z.object({
       text: z.string(),
-      kind: z.enum(['default', 'accent', 'rec', 'warn']).default('default'),
+      kind: z.enum(['default', 'accent']).default('default'),
     })),
     links: z.array(z.object({
       label: z.string(),
-      href: z.string().url(),
+      href: z.url({ protocol: /^https$/ }),
     })).default([]),
   }),
 });
@@ -37,11 +37,11 @@ const projects = defineCollection({
     year: z.number().int(),
     order: z.number().int(),
     thumb: image().optional(),
-    live: z.string().url().optional(),
-    repo: z.string().url().optional(),
+    live: z.url({ protocol: /^https$/ }).optional(),
+    repo: z.url({ protocol: /^https$/ }).optional(),
     draft: z.boolean().default(false),
     placeholder: z.boolean().default(false),
-  }).refine(d => d.live || d.repo, {
+  }).refine(d => d.placeholder || d.live || d.repo, {
     message: 'a project needs a live URL, a repo URL, or both',
   }),
 });

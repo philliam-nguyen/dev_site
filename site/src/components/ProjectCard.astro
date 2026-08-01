@@ -15,7 +15,7 @@ const idx = String(index).padStart(2, '0');
   <div class="thumb">
     {thumb
       ? <Image src={thumb} alt="" width={640} height={360} loading="lazy" />
-      : <em class="thumb-empty">no image yet</em>
+      : <span class="thumb-empty">no image yet</span>
     }
     <i class="thumb-idx" aria-hidden="true">{idx}</i>
   </div>

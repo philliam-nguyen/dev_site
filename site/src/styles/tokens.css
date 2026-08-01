@@ -1,9 +1,10 @@
 /* Design tokens. AUTHORITY: the_LAB/html_artifacts docs/specs/0001-artifact-system.md,
    section "Palette tokens". This file is a second implementation of that table.
    Divergences are recorded in docs/adr/0004-visual-identity-port.md and are
-   limited to: font delivery, the added --accent-text, and the usage rule that
-   --ink-faint never carries text. Do not edit a value here without updating
-   that ADR. Layout rules belong in site.css, never here. */
+   limited to: font delivery, the added --accent-text, the usage rule that
+   --ink-faint never carries text, and the added --hatch and --blueprint
+   texture tokens. Do not edit a value here without updating that ADR.
+   Layout rules belong in site.css, never here. */
 
 @font-face {
   font-family: 'Anton';
