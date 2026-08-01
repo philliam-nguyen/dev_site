@@ -99,15 +99,20 @@ const projects = defineCollection({
     year: z.number().int(),
     order: z.number().int(),
     thumb: image().optional(),
-    live: z.string().url().optional(),
-    repo: z.string().url().optional(),
+    live: z.url({ protocol: /^https$/ }).optional(),
+    repo: z.url({ protocol: /^https$/ }).optional(),
     draft: z.boolean().default(false),
     placeholder: z.boolean().default(false),
-  }).refine(d => d.live || d.repo, {
+  }).refine(d => d.placeholder || d.live || d.repo, {
     message: 'a project needs a live URL, a repo URL, or both',
   }),
 });
 ```
+
+The `protocol` restriction is doing real work. Plain `z.string().url()` accepts
+`javascript:alert(1)`, which would render straight into an `href` on a site whose
+headline property is shipping no JavaScript. Constraining the scheme makes that
+unrepresentable in content rather than something a test has to catch.
 
 `about` is a single markdown entry carrying the same `placeholder` boolean.
 `site` is a YAML entry holding the wordmark name, role line, eyebrow text, badge
@@ -120,8 +125,14 @@ the ability to lead with an older project without editing its year.
 
 **Link types are derived, not declared.** There is no `type` field. The card
 renders a Live chip when `live` exists and a Source chip when `repo` exists. The
-`refine` fails the build on an entry with neither. An unfinished project omits
-`live` and gains it in one line when it ships.
+`refine` fails the build on a real entry with neither. An unfinished project
+omits `live` and gains it in one line when it ships.
+
+Placeholders are exempt from that rule. A stub is not a project, so requiring it
+to carry a link only forces a fake URL into the content, and the seed entries
+shipped a `github.com/example/placeholder` link that resolved to a real 404. The
+skeleton is supposed to read as deliberately unfinished, and a working-looking
+link that 404s reads as broken instead.
 
 ### Components
 
@@ -226,7 +237,12 @@ jobs:
     permissions: { id-token: write, contents: read }
 ```
 
-Steps: `npm ci`, `astro check`, `astro build`, assume role, sync, invalidate.
+Steps: `npm ci`, `npx playwright install chromium`, `astro check`, `npm test`,
+`npm run test:a11y`, `astro build`, assume role, sync, invalidate.
+
+The browser install is a separate step because `npm ci` does not download it.
+Running both suites in the workflow is what makes ADR 0004's accessibility
+guarantee binding rather than a local habit.
 
 Two sync passes, and the order matters. Hashed assets go first with
 `max-age=31536000, immutable`; HTML goes second with `max-age=0,

@@ -133,8 +133,21 @@ costs the site its zero-JavaScript property.
   where they differ.
 - The contrast divergence is permanent unless html_artifacts adopts the same
   values.
-- `axe-core` runs against both themes in CI, specifically to protect the
-  overridden values from a future token edit.
+- `axe-core` runs against both themes via `npm run test:a11y`, specifically to
+  protect the overridden values from a future token edit. **This is local-only
+  today.** No CI exists in this repository yet, and making the check binding
+  requires the deploy workflow to run `npm test` and `npm run test:a11y`, plus
+  `npx playwright install chromium`, which `npm ci` does not do. Recorded in the
+  spec as a requirement on the Terraform plan.
+
+  The suite has limits worth knowing. It renders only the states the seed
+  content produces, so it cannot see a rule no content reaches. Two real AA
+  failures hid behind exactly that during the build: the `:focus-visible` outline
+  against a populated card's panel, which never rendered because every seed card
+  is a transparent placeholder, and the `rec` and `warn` badge kinds, which the
+  schema allowed but no content requested. Both were found by reading, not by
+  the gate. A passing axe run means the rendered states are clean, not that the
+  stylesheet is.
 
 ## Observed, not fixed
 
