@@ -352,6 +352,61 @@ Recorded so the current design does not fight them. None are in scope.
 - A scheduled link checker once project entries carry external URLs worth
   rotting.
 
+## Carried into the Terraform plan
+
+Found while building the site. Each one is an input to the infrastructure work,
+not a site defect.
+
+- **Two assets are not content-hashed.** `favicon.svg` and `fonts/anton.woff2`
+  keep stable filenames, and the deploy's first sync pass gives everything except
+  `*.html` a year-long `immutable` header. Rename either file when its contents
+  change, or exclude the two from that pass. `tokens.css` carries this warning
+  for the font; the favicon has none.
+- **Pin `build.inlineStylesheets`.** Astro's `'auto'` inlines stylesheets under
+  roughly 4 kB, and this build's output actually crossed that threshold partway
+  through and flipped from an inline `<style>` to an external hashed file. The
+  CSP in the response headers policy depends on which one ships, so the value
+  should be pinned rather than left to the size of the stylesheet.
+- **The deploy workflow needs `npx playwright install chromium`.** `npm ci` does
+  not download browsers, so `npm run test:a11y` fails in CI without it.
+- **`astro.config.mjs`'s `site` value** is `https://example.com` until the domain
+  is registered.
+
+## Known limits of the accessibility gate
+
+Recorded because a passing suite is easy to over-trust.
+
+`npm run test:a11y` renders only the states the seed content produces. It cannot
+see a rule that no content reaches. Two real AA failures hid behind exactly that
+and were found by reading rather than by the gate: the `:focus-visible` outline
+against a populated card's panel, invisible because every seed card is a
+transparent placeholder, and the `rec` and `warn` badge kinds, which the schema
+allowed but nothing requested. The first was fixed, the second removed from the
+schema.
+
+The zero-JavaScript test checks response URLs against `/\.m?js(\?|$)/`, counts
+`<script>` elements, and collects `on*` attribute names. It does not cover
+`javascript:` URIs, which the content schema now makes unrepresentable instead,
+or shadow-DOM content, which is unreachable without JavaScript on the page.
+
+## Deferred, with rulings
+
+Real, understood, and deliberately not fixed.
+
+- `favicon.svg` hardcodes its colors and does not follow `prefers-color-scheme`.
+  An embedded `<style>` with a media query inside the SVG would work; `var()`
+  would not, since an icon-linked SVG sits outside the page cascade.
+- `<Image>` is fixed at 640x360 and Astro 7 refuses to upscale, so a first real
+  thumbnail smaller than that fails the build. Loud failure, no code exercises it
+  yet.
+- `alt=""` treats project screenshots as decorative. The adjacent heading names
+  the project and the blurb describes it. Revisit if a thumbnail ever carries
+  information the card text does not.
+- Nothing enforces unique `order`. Duplicates fall back to glob order silently,
+  which is the likely result of copying a project file without renumbering.
+- There is no `README`. The npm scripts and the Node floor live in the plan
+  document, which is meant to be archived.
+
 ## Open questions
 
 None blocking. The domain name is chosen at registration time and threaded
