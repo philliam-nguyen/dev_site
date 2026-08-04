@@ -2,7 +2,18 @@
 date: 2026-07-29
 spec: 0001
 feature: site-build
+status: complete
+completed: 2026-07-31
 ---
+
+> **Burned down 2026-07-31 at commit `3a0d0a2`.** All ten tasks executed and
+> reviewed, plus one whole-branch review and a fix wave. This plan is history;
+> `docs/specs/0001-developer-site.md` is the living design and
+> `docs/progress.md` is the current state.
+>
+> The plan was amended six times mid-execution as reviews found defects in it.
+> The task text below reflects the final amended version, not what was written
+> on 2026-07-29. Git history has the original.
 
 # Developer Site (Astro) Implementation Plan
 
@@ -43,7 +54,7 @@ feature: site-build
 - Consumes: nothing
 - Produces: a buildable Astro project at `site/`, `npm run build` emitting `site/dist/index.html`
 
-- [ ] **Step 1: Create the root `.gitignore`**
+- [x] **Step 1: Create the root `.gitignore`**
 
 ```
 node_modules/
@@ -64,7 +75,7 @@ test-results/
 playwright-report/
 ```
 
-- [ ] **Step 2: Create `site/package.json`**
+- [x] **Step 2: Create `site/package.json`**
 
 ```json
 {
@@ -90,7 +101,7 @@ playwright-report/
 }
 ```
 
-- [ ] **Step 3: Create `site/astro.config.mjs`**
+- [x] **Step 3: Create `site/astro.config.mjs`**
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -103,7 +114,7 @@ export default defineConfig({
 
 The `site` value is a placeholder until the domain is registered. `format: 'file'` emits `dist/index.html` rather than `dist/index/index.html`, which matches the S3 sync and `default_root_object` in the spec.
 
-- [ ] **Step 4: Create `site/tsconfig.json`**
+- [x] **Step 4: Create `site/tsconfig.json`**
 
 ```json
 {
@@ -113,7 +124,7 @@ The `site` value is a placeholder until the domain is registered. `format: 'file
 }
 ```
 
-- [ ] **Step 5: Create a minimal `site/src/pages/index.astro`**
+- [x] **Step 5: Create a minimal `site/src/pages/index.astro`**
 
 ```astro
 ---
@@ -130,7 +141,7 @@ The `site` value is a placeholder until the domain is registered. `format: 'file
 </html>
 ```
 
-- [ ] **Step 6: Install and build**
+- [x] **Step 6: Install and build**
 
 Run from `site/`:
 
@@ -141,7 +152,7 @@ npm run build
 
 Expected: `site/dist/index.html` exists and contains `scaffold`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add .gitignore site/package.json site/package-lock.json site/astro.config.mjs site/tsconfig.json site/src/pages/index.astro
@@ -166,7 +177,7 @@ emits dist/index.html to match the S3 default_root_object."
 
 The function is generic over a **structural** shape rather than typed against `CollectionEntry`. `astro:content` is a virtual module that does not resolve under vitest, and a pure function should not depend on the framework anyway. The generic still accepts real collection entries at the call site.
 
-- [ ] **Step 1: Create `site/vitest.config.ts`**
+- [x] **Step 1: Create `site/vitest.config.ts`**
 
 ```ts
 import { defineConfig } from 'vitest/config';
@@ -179,7 +190,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 Create `site/src/lib/sortProjects.test.ts`:
 
@@ -214,13 +225,13 @@ describe('sortProjects', () => {
 
 The non-mutation test matters because `Array.prototype.sort` sorts in place. Sorting the array `getCollection` returned would mutate Astro's cached collection.
 
-- [ ] **Step 3: Run the test to verify it fails**
+- [x] **Step 3: Run the test to verify it fails**
 
 Run from `site/`: `npx vitest run src/lib/sortProjects.test.ts`
 
 Expected: FAIL, "Failed to resolve import ./sortProjects".
 
-- [ ] **Step 4: Write the implementation**
+- [x] **Step 4: Write the implementation**
 
 Create `site/src/lib/sortProjects.ts`:
 
@@ -238,13 +249,13 @@ export function sortProjects<T extends SortableProject>(entries: T[]): T[] {
 
 `filter` returns a new array, so the subsequent `sort` never touches the input.
 
-- [ ] **Step 5: Run the tests to verify they pass**
+- [x] **Step 5: Run the tests to verify they pass**
 
 Run from `site/`: `npx vitest run`
 
 Expected: PASS, 4 tests.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add site/vitest.config.ts site/src/lib/
@@ -270,7 +281,7 @@ virtual module."
 - Consumes: nothing
 - Produces: three collections queryable as `getEntry('site', 'site')`, `getEntry('about', 'about')`, `getCollection('projects')`. Field names are fixed here and used verbatim by Tasks 6, 7, and 8.
 
-- [ ] **Step 1: Create `site/src/content.config.ts`**
+- [x] **Step 1: Create `site/src/content.config.ts`**
 
 ```ts
 import { defineCollection } from 'astro:content';
@@ -324,7 +335,7 @@ const projects = defineCollection({
 export const collections = { site, about, projects };
 ```
 
-- [ ] **Step 2: Create `site/src/content/site.yml`**
+- [x] **Step 2: Create `site/src/content/site.yml`**
 
 ```yaml
 name: Phil Nguyen
@@ -341,7 +352,7 @@ badges:
 links: []
 ```
 
-- [ ] **Step 3: Create `site/src/content/about.md`**
+- [x] **Step 3: Create `site/src/content/about.md`**
 
 ```markdown
 ---
@@ -355,7 +366,7 @@ Set `placeholder: false` in the frontmatter when this is real, and the dashed
 frame around it disappears.
 ```
 
-- [ ] **Step 4: Create the two seed projects**
+- [x] **Step 4: Create the two seed projects**
 
 `site/src/content/projects/project-one.md`:
 
@@ -385,13 +396,13 @@ placeholder: true
 ---
 ```
 
-- [ ] **Step 5: Verify the build succeeds**
+- [x] **Step 5: Verify the build succeeds**
 
 Run from `site/`: `npm run build`
 
 Expected: build succeeds. Astro generates `.astro/types.d.ts` with the collection types.
 
-- [ ] **Step 6: Verify the schema actually rejects bad input**
+- [x] **Step 6: Verify the schema actually rejects bad input**
 
 This step proves the guarantee rather than assuming it. Create `site/src/content/projects/tmp-bad.md`:
 
@@ -416,7 +427,7 @@ rm site/src/content/projects/tmp-bad.md
 
 Run `npm run build` again. Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add site/src/content.config.ts site/src/content/
@@ -445,7 +456,7 @@ by a deliberate failing build."
 2. `--accent-text` is a **new token**. `--accent` at `#e8611c` measures 3.13:1 on `--bg` and fails AA for text. Rather than darkening `--accent` globally, which dulls the wordmark dot, chevrons, and borders that carry the identity, the darkened value lives in a separate token used only where accent-colored **text** appears. Dark mode needs no override, since `#f6832f` measures 6.93:1.
 3. `--ink-faint` keeps its value and loses its text uses. At AA on this background it would have to darken to roughly `#6f6c62`, which is indistinguishable from `--ink-dim` at `#6d6a61` and collapses the two-step hierarchy. Instead, every rule in `site.css` that renders text uses `--ink-dim` (4.97:1 light, 5.80:1 dark), and `--ink-faint` survives for non-text ornament only.
 
-- [ ] **Step 1: Copy the font**
+- [x] **Step 1: Copy the font**
 
 ```powershell
 New-Item -ItemType Directory -Force site/public/fonts
@@ -454,7 +465,7 @@ Copy-Item ../../html_artifacts/docs/authoring/assets/anton.woff2 site/public/fon
 
 Adjust the source path to wherever `the_LAB/html_artifacts` sits relative to this repo. The file is 8,680 bytes.
 
-- [ ] **Step 2: Create `site/src/styles/tokens.css`**
+- [x] **Step 2: Create `site/src/styles/tokens.css`**
 
 ```css
 /* Design tokens. AUTHORITY: the_LAB/html_artifacts docs/specs/0001-artifact-system.md,
@@ -538,7 +549,7 @@ carry a texture overlay that has to invert with the scheme: a near-black overlay
 on a dark panel shifts the pixels by one or two units and the texture vanishes.
 Keeping them as tokens is what stops a color literal from living in `site.css`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add site/src/styles/tokens.css site/public/fonts/anton.woff2
@@ -564,7 +575,7 @@ its text uses instead, because darkening it to AA collapses it into
 - Consumes: `tokens.css` from Task 4
 - Produces: `Base.astro` accepting `{ title: string; description: string }` and rendering a default slot inside `main.wrap`. Tasks 6 through 9 add sections into that slot.
 
-- [ ] **Step 1: Create `site/src/components/Hud.astro`**
+- [x] **Step 1: Create `site/src/components/Hud.astro`**
 
 ```astro
 ---
@@ -576,7 +587,7 @@ its text uses instead, because darkening it to AA collapses it into
 <span class="tick br" aria-hidden="true">+</span>
 ```
 
-- [ ] **Step 2: Create `site/src/layouts/Base.astro`**
+- [x] **Step 2: Create `site/src/layouts/Base.astro`**
 
 ```astro
 ---
@@ -616,7 +627,7 @@ const { title, description } = Astro.props;
 </html>
 ```
 
-- [ ] **Step 3: Create `site/public/favicon.svg`**
+- [x] **Step 3: Create `site/public/favicon.svg`**
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -625,7 +636,7 @@ const { title, description } = Astro.props;
 </svg>
 ```
 
-- [ ] **Step 4: Create `site/src/styles/site.css` with the shell rules**
+- [x] **Step 4: Create `site/src/styles/site.css` with the shell rules**
 
 ```css
 /* Layout for this site. Design tokens live in tokens.css and are never
@@ -684,7 +695,7 @@ code {
 }
 ```
 
-- [ ] **Step 5: Rewrite `site/src/pages/index.astro`**
+- [x] **Step 5: Rewrite `site/src/pages/index.astro`**
 
 ```astro
 ---
@@ -699,7 +710,7 @@ if (!site) throw new Error('src/content/site.yml is missing');
 </Base>
 ```
 
-- [ ] **Step 6: Verify the build and inspect the output**
+- [x] **Step 6: Verify the build and inspect the output**
 
 Run from `site/`:
 
@@ -717,7 +728,7 @@ Get-ChildItem dist -Recurse -Filter *.js
 
 Expected: no results.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add site/src/layouts/ site/src/components/Hud.astro site/src/styles/site.css site/src/pages/index.astro site/public/favicon.svg
@@ -738,7 +749,7 @@ git commit -m "Task 5: base layout, HUD furniture, page shell"
 - Consumes: the `site` collection entry from Task 3, `Base.astro` from Task 5
 - Produces: `Eyebrow` accepting `{ left: string; right?: string }`, `Wordmark` accepting `{ name: string }`
 
-- [ ] **Step 1: Create `site/src/components/Eyebrow.astro`**
+- [x] **Step 1: Create `site/src/components/Eyebrow.astro`**
 
 ```astro
 ---
@@ -755,7 +766,7 @@ const { left, right } = Astro.props;
 </p>
 ```
 
-- [ ] **Step 2: Create `site/src/components/Wordmark.astro`**
+- [x] **Step 2: Create `site/src/components/Wordmark.astro`**
 
 ```astro
 ---
@@ -768,7 +779,7 @@ const { name } = Astro.props;
 <h1 class="wordmark">{name}<span class="dot" aria-hidden="true">.</span></h1>
 ```
 
-- [ ] **Step 3: Append the header rules to `site/src/styles/site.css`**
+- [x] **Step 3: Append the header rules to `site/src/styles/site.css`**
 
 ```css
 /* ---- header ---- */
@@ -892,7 +903,7 @@ const { name } = Astro.props;
 
 `.links` is styled now even though `site.yml` ships an empty array, so adding a link later is a content edit with no CSS work.
 
-- [ ] **Step 4: Update `site/src/pages/index.astro`**
+- [x] **Step 4: Update `site/src/pages/index.astro`**
 
 ```astro
 ---
@@ -926,13 +937,13 @@ const { name, role, portraitInitials, eyebrowLeft, eyebrowRight, badges, links }
 </Base>
 ```
 
-- [ ] **Step 5: Verify visually**
+- [x] **Step 5: Verify visually**
 
 Run from `site/`: `npm run dev`, then open the printed localhost URL.
 
 Expected: the Anton wordmark reads "PHIL NGUYEN." with an orange period, four badges with Infrastructure in accent styling, a hatched portrait panel showing "PN", and no link row.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add site/src/components/Eyebrow.astro site/src/components/Wordmark.astro site/src/styles/site.css site/src/pages/index.astro
@@ -953,7 +964,7 @@ git commit -m "Task 6: header with eyebrow, wordmark, badges"
 - Consumes: the `about` collection entry from Task 3
 - Produces: `SectionHead` accepting `{ index: string; kicker: string; heading: string; id?: string }`, `Stub` accepting `{ file: string; active?: boolean }` and wrapping a default slot when `active`, passing it through untouched otherwise
 
-- [ ] **Step 1: Create `site/src/components/SectionHead.astro`**
+- [x] **Step 1: Create `site/src/components/SectionHead.astro`**
 
 ```astro
 ---
@@ -970,7 +981,7 @@ const { index, kicker, heading, id } = Astro.props;
 <h2 id={id}>{heading}</h2>
 ```
 
-- [ ] **Step 2: Create `site/src/components/Stub.astro`**
+- [x] **Step 2: Create `site/src/components/Stub.astro`**
 
 ```astro
 ---
@@ -995,7 +1006,7 @@ const { file, active = true } = Astro.props;
 every caller needs a ternary with the same markup in both branches, and the two
 copies drift the first time one of them changes.
 
-- [ ] **Step 3: Append the section and stub rules to `site/src/styles/site.css`**
+- [x] **Step 3: Append the section and stub rules to `site/src/styles/site.css`**
 
 ```css
 /* ---- sections ---- */
@@ -1056,7 +1067,7 @@ h2 {
 }
 ```
 
-- [ ] **Step 4: Update `site/src/pages/index.astro`**
+- [x] **Step 4: Update `site/src/pages/index.astro`**
 
 Add these imports below the existing ones:
 
@@ -1085,7 +1096,7 @@ Add this section after the closing `</header>`:
   </section>
 ```
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 Run from `site/`: `npm run build`
 
@@ -1093,7 +1104,7 @@ Expected: build succeeds. Open `npm run dev` and confirm the About section shows
 
 Then flip `placeholder: false` in `about.md`, reload, and confirm the dashed frame disappears and the prose renders plainly. Set it back to `true` before committing.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add site/src/components/SectionHead.astro site/src/components/Stub.astro site/src/styles/site.css site/src/pages/index.astro
@@ -1116,7 +1127,7 @@ through the same path with the frame omitted."
 - Consumes: `sortProjects` from Task 2, the `projects` collection from Task 3, `SectionHead` and `Stub` from Task 7
 - Produces: `ProjectCard` accepting `{ entry: CollectionEntry<'projects'>; index: number }`
 
-- [ ] **Step 1: Create `site/src/components/ProjectCard.astro`**
+- [x] **Step 1: Create `site/src/components/ProjectCard.astro`**
 
 ```astro
 ---
@@ -1159,7 +1170,7 @@ const idx = String(index).padStart(2, '0');
 
 The Live and Source links are derived from which URLs exist. There is no `type` field, and the schema's `refine` guarantees at least one is present.
 
-- [ ] **Step 2: Append the card rules to `site/src/styles/site.css`**
+- [x] **Step 2: Append the card rules to `site/src/styles/site.css`**
 
 ```css
 /* ---- project cards ---- */
@@ -1280,7 +1291,7 @@ instead of an inline `style` attribute on the call site. `Stub` from Task 7 is
 already imported in `index.astro`, so the grid note reuses it rather than
 hand-writing a second copy of the same markup.
 
-- [ ] **Step 3: Update `site/src/pages/index.astro`**
+- [x] **Step 3: Update `site/src/pages/index.astro`**
 
 Add these imports:
 
@@ -1328,19 +1339,19 @@ Add this section after the About section:
   </section>
 ```
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 Run from `site/`: `npm run build && npm run dev`
 
 Expected: two dashed cards, each showing "no image yet", a mono index, a Source link, and a stack chip plus a year chip. Below the grid, a dashed note naming `src/content/projects/`.
 
-- [ ] **Step 5: Verify a populated card**
+- [x] **Step 5: Verify a populated card**
 
 Temporarily edit `project-one.md`: set `placeholder: false`, change `title` to `Real project`, and add `live: https://example.com`.
 
 Run `npm run dev`. Expected: card one has a solid border, both a Live and a Source link, and the grid note disappears (because not every entry is a placeholder now). Revert the edits before committing.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add site/src/components/ProjectCard.astro site/src/styles/site.css site/src/pages/index.astro
@@ -1361,7 +1372,7 @@ field, so there is one source of truth."
 - Consumes: every rule from Tasks 5 through 8
 - Produces: nothing new
 
-- [ ] **Step 1: Append the breakpoint to `site/src/styles/site.css`**
+- [x] **Step 1: Append the breakpoint to `site/src/styles/site.css`**
 
 ```css
 /* ---- narrow ---- */
@@ -1395,13 +1406,13 @@ field, so there is one source of truth."
 }
 ```
 
-- [ ] **Step 2: Verify at narrow width**
+- [x] **Step 2: Verify at narrow width**
 
 Run `npm run dev`, open dev tools, and set the viewport to 375px wide.
 
 Expected: the portrait sits above the wordmark rather than beside it, cards stack one across, the eyebrow wraps to two lines, and no horizontal scrollbar appears.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add site/src/styles/site.css
@@ -1423,7 +1434,7 @@ git commit -m "Task 9: responsive collapse at 640px"
 
 **Why Playwright rather than `@axe-core/cli`,** which the spec named: the whole point of this check is the contrast overrides from Task 4, and verifying dark mode requires emulating `prefers-color-scheme: dark`. `@axe-core/cli` has no way to set that. jsdom is also disqualified, because axe's color-contrast rule needs real rendering and jsdom does not compute it.
 
-- [ ] **Step 1: Install the dependencies**
+- [x] **Step 1: Install the dependencies**
 
 Run from `site/`:
 
@@ -1432,7 +1443,7 @@ npm install -D @playwright/test @axe-core/playwright
 npx playwright install chromium
 ```
 
-- [ ] **Step 2: Create `site/playwright.config.ts`**
+- [x] **Step 2: Create `site/playwright.config.ts`**
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -1449,7 +1460,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3: Write the failing test**
+- [x] **Step 3: Write the failing test**
 
 Create `site/tests/a11y.spec.ts`:
 
@@ -1498,13 +1509,13 @@ to ship no JavaScript at all, so the gate should be able to substantiate that
 rather than a common case of it. `handlers` collects attribute names rather than
 a count so a failure says which attribute it found.
 
-- [ ] **Step 4: Run it**
+- [x] **Step 4: Run it**
 
 Run from `site/`: `npm run test:a11y`
 
 Expected: all three tests PASS. If a contrast violation appears, the token values in Task 4 are wrong and get fixed there, not worked around here.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add site/playwright.config.ts site/tests/ site/package.json site/package-lock.json
