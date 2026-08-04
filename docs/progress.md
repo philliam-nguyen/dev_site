@@ -27,6 +27,22 @@ Of the spec's eight success criteria, 4 through 7 are met. Criteria 1, 2, 3, and
 Verified on the merged tree: `astro check` clean, vitest 4/4, axe passing in both
 color schemes, zero JavaScript in the build.
 
+**Visual acceptance closed 2026-07-31** against `mockups/built-light.png` and
+`built-dark.png`, both rendered from the merged build. This was the last
+outstanding Definition-of-Done item. Four things were reviewed and accepted as
+deliberate rather than fixed, so they should not be re-raised as defects:
+
+- Stub cards carry a `2026` year chip; the approved mockup showed only a stack
+  chip.
+- Stub thumbnails carry an `01` / `02` index; the mockup had those on populated
+  cards only.
+- The About stub renders real prose explaining how to replace it, where the
+  mockup showed filler bars.
+- In light mode the accent reads two-tone: `--accent-text` (`#a8430e`) on the
+  eyebrow and kicker text sits beside `--accent` (`#e8611c`) on the chevrons and
+  the wordmark period. This is the known cost of the contrast split in ADR 0004.
+  Dark uses `#f6832f` for both and shows no split.
+
 ## In progress
 
 Nothing. No branch is open and the working tree is clean.
