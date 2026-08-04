@@ -404,8 +404,8 @@ Real, understood, and deliberately not fixed.
   information the card text does not.
 - Nothing enforces unique `order`. Duplicates fall back to glob order silently,
   which is the likely result of copying a project file without renumbering.
-- There is no `README`. The npm scripts and the Node floor live in the plan
-  document, which is meant to be archived.
+- ~~There is no `README`~~. Resolved: `site/README.md` documents the scripts,
+  the Node floor, and the content model.
 
 ## Open questions
 
