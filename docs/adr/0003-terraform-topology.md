@@ -84,3 +84,34 @@ something region-sensitive appears.
   outputs is a breaking change and needs to be treated as one.
 - Adding an app is a new directory under `stacks/` and a module call, not a new
   copy of a distribution config.
+
+## Amendment, 2026-08-06: where the domain name lives
+
+The original decision left this open. `platform/` needs the domain for the
+certificate and the zone lookup, and every app stack needs it for its subdomain
+record.
+
+**Decision.** `platform/` declares the domain as a variable and re-exports it as
+an output. App stacks read it from `data.terraform_remote_state.platform`
+instead of declaring their own copy. If a stack later moves to a different
+domain, it gets an override variable defaulting to the platform output, so the
+exception stays visible in that stack's config.
+
+**Alternatives rejected.**
+
+*A variable in each stack, fed from its own tfvars.* That leaves five copies of
+one string with nothing comparing them, and a typo in any copy still produces a
+valid plan pointing at the wrong DNS record.
+
+*A shared tfvars at the `infra/` root, passed with `-var-file`.* The value stays
+written once, but the sharing then depends on someone remembering a flag on
+every invocation. Reading the platform output puts the same constraint in the
+dependency graph, where forgetting it fails at plan time.
+
+**Consequences.**
+
+The domain joins the platform outputs, so the consequence above applies to it:
+changing it breaks every app stack.
+
+No app stack can plan before `platform/` has been applied. That already held for
+the certificate ARN and the OIDC provider ARN, so this adds no new coupling.

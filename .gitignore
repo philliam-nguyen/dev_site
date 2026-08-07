@@ -14,3 +14,6 @@ dist/
 # playwright
 test-results/
 playwright-report/
+
+# html artifacts
+docs/html_artifacts
