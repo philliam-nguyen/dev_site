@@ -65,9 +65,11 @@ ignoring `docs/html_artifacts`.
 
 ## Next
 
-1. **Register the domain**, and confirm an AWS account with a local
-   admin-capable profile. Both block Session 1 of the plan and any
-   `terraform apply`.
+1. **Install Terraform and the AWS CLI, then configure a named profile.**
+   Neither binary is installed and no `~/.aws` exists, so blocking
+   prerequisite 2 is still open and no `terraform apply` can run. The domain
+   half of the block is closed. Unit 1.1 is done in the working tree and
+   wants its decision-log row and a commit.
 2. **Run the three sessions** in `docs/plans/2026-08-06-infra-curriculum.md`:
    state and platform, then the `static-site` module and the portfolio stack,
    then the GitHub Actions deploy path. The plan is author-built with coaching
@@ -79,8 +81,6 @@ ignoring `docs/html_artifacts`.
 
 ## Open questions
 
-- **Which domain name?** It determines the hosted zone and threads through
-  everything as a Terraform variable. Nothing can be applied without it.
 - **Root `README`?** The repository landing page is currently blank.
   `site/README.md` covers the commands and the content model, but a root README
   would want to describe `site/` and `infra/` together, which reads better once
@@ -88,6 +88,18 @@ ignoring `docs/html_artifacts`.
 
 ## State the next phase depends on
 
+- **The domain is `phillip-nguyen.dev`**, registered through Route 53 on
+  2026-08-07 so the hosted zone was created with it. This is `var.domain_name`
+  in `platform/`, and app stacks read it back from the platform output rather
+  than declaring copies, per the ADR 0003 amendment. The hosted zone still
+  needs confirming with `aws route53 list-hosted-zones-by-name` once the AWS
+  CLI is installed.
+- **`.dev` is HSTS-preloaded at the TLD level**, which sharpens Unit 2.3's
+  `preload = false` decision: submission to the preload list is redundant
+  because browsers already force HTTPS on every `.dev` host. The
+  `strict_transport_security` block still carries `max-age` and
+  `includeSubDomains`. Confirm against the current preload list before
+  repeating the claim.
 - **The OIDC trust policy value is fixed** by the repository name:
   `repo:philliam-nguyen/dev_site:ref:refs/heads/main`. Renaming the repo breaks
   deploys until Terraform is re-applied.

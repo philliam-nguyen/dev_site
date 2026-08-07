@@ -9,7 +9,6 @@ dist/
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
-.terraform.lock.hcl
 
 # playwright
 test-results/
