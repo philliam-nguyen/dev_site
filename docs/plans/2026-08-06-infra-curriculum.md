@@ -633,45 +633,51 @@ how many apps deploy.
 
 The thumbprint argument is where this gets murky. Historically it was the SHA-1
 fingerprint of the CA certificate in the issuer's TLS chain, and it had to be
-manually updated when GitHub rotated CAs. Two ways to supply it:
+manually updated when GitHub rotated CAs. Three ways to handle it:
 
 1. Hardcode the well-known fingerprint. Reproducible, and it goes stale.
 2. Read it at plan time with `data "tls_certificate"`. Always current, and it
    adds a provider plus a network call during plan.
+3. Omit it entirely. No second provider, no data source, no value to keep
+   current.
 
-**Flagging as uncertain, verify before you commit to an explanation:** AWS
-published a change under which IAM no longer relies on the thumbprint for OIDC
-providers whose issuers use certificates from well-known CAs, GitHub's included
-— while the API still requires the field to be populated. If that is still
-accurate, the argument is vestigial for this issuer and the choice between the
-two options is close to cosmetic. Check the current IAM OIDC documentation
-before repeating that claim out loud, because it is the kind of detail an
-interviewer follows up on.
+**Verified 2026-08-07, replacing this section's earlier uncertainty flag.** IAM
+verifies the OIDC endpoint's TLS certificate against its own library of trusted
+root certificate authorities. The thumbprint is consulted only as a fallback:
+when the issuer's certificate is not signed by a trusted CA, when AWS cannot
+retrieve the certificate, or when TLS 1.3 is required. GitHub's issuer uses a
+well-known CA, so for this provider the thumbprint is never read. This became
+GitHub-specific behavior on 2023-07-06 and general IAM behavior in July 2024.
 
-Either way `data "tls_certificate"` is the safer default: it cannot go stale,
-and being wrong about a vestigial field costs nothing.
+The earlier draft also claimed the API still requires the field to be
+populated. That is wrong. `CreateOpenIDConnectProvider` treats the thumbprint as
+optional and derives one itself when it is absent, and the AWS provider declares
+`thumbprint_list` as `Optional: true, Computed: true`, so omitting it records
+AWS's derived value in state rather than leaving a permanent diff.
+
+Option 3 is the choice. Options 1 and 2 both pay something to compute a value
+that has no consumer. Option 2 stays the right answer for an issuer whose
+certificate chain does not come from a well-known CA.
+
+Sources: IAM's "Obtain the thumbprint for an OpenID Connect identity provider",
+the GitHub changelog entry of 2023-07-13, and the AWS IAM announcement of July
+2024.
 
 **Build.**
 
-- Add `hashicorp/tls` to `required_providers` in `platform/versions.tf`.
-- `data "tls_certificate"` against the issuer's
-  `/.well-known/openid-configuration` URL.
-- `aws_iam_openid_connect_provider` with `url` set to the issuer,
-  `client_id_list = ["sts.amazonaws.com"]`, and the thumbprint from the data
-  source.
+- `aws_iam_openid_connect_provider` with `url` set to the issuer and
+  `client_id_list = ["sts.amazonaws.com"]`. No `thumbprint_list`.
 - Output `oidc_provider_arn`.
+
+`platform/versions.tf` is unchanged. Under option 2 this unit would have added
+`hashicorp/tls` to `required_providers`; option 3 needs no second provider.
 
 **Compare.**
 
 ```hcl
-data "tls_certificate" "github" {
-  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
-}
-
 resource "aws_iam_openid_connect_provider" "github" {
-  url             = "https://token.actions.githubusercontent.com"
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.github.certificates[0].sha1_fingerprint]
+  url            = "https://token.actions.githubusercontent.com"
+  client_id_list = ["sts.amazonaws.com"]
 }
 ```
 
@@ -688,6 +694,18 @@ $oidc = terraform output -raw oidc_provider_arn
 aws iam get-open-id-connect-provider --open-id-connect-provider-arn $oidc --query "ClientIDList" --output text
 ```
 Expected: `sts.amazonaws.com`
+
+```powershell
+aws iam get-open-id-connect-provider --open-id-connect-provider-arn $oidc --query "length(ThumbprintList)" --output text
+```
+Expected: `1`. The config never supplies a thumbprint, so a non-zero count is
+IAM deriving one on its own, which is the option 3 claim made concrete.
+
+```powershell
+terraform plan -detailed-exitcode; $LASTEXITCODE
+```
+Expected: `0`. This is the check that `thumbprint_list` being `Computed` holds:
+exit 2 would mean the derived value shows as a diff on every plan.
 
 ---
 
@@ -2391,9 +2409,9 @@ explainable months later, and it is worth more than the HCL.
 | 1.1 | | | |
 | 1.2 | | | |
 | 1.3 | | | |
-| 1.4 | | | |
-| 1.5 | | | |
-| 1.6 | | | |
+| 1.4 | Data source for the zone; one certificate with apex plus `*.apex` SAN; `allow_overwrite = true` on the validation records | Zone as a resource; per-subdomain certificates; deduplicating the `for_each` on `resource_record_name` | `allow_overwrite` makes any second write idempotent and allows re-applying the certificate after a replacement |
+| 1.5 | Omit `thumbprint_list` from `aws_iam_openid_connect_provider` | Hardcoding the well-known fingerprint; reading it at plan time with `data "tls_certificate"` | It is not required anymore, because IAM verifies the TLS certificate against its own trust library |
+| 1.6 | `$5` monthly limit with both notifications: `ACTUAL` at 80% and `FORECASTED` at 100% | CloudFront access logs; CloudWatch alarms on CloudFront metrics; a single notification type | $5 is a cheap anomaly detector against a real bill of roughly $0.50, and `FORECASTED` gives early warning that `ACTUAL` alone would not |
 | 2.1 | | | |
 | 2.2 | | | |
 | 2.3 | | | |

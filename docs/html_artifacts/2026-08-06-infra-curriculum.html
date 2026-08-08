@@ -2130,7 +2130,7 @@ Implements ADR-0002."</code></pre>
   <table class="matrix matrix--log">
     <thead><tr><th>Unit</th><th>Decision</th><th>Rejected</th><th>Why</th></tr></thead>
     <tbody>
-      <tr><td>1.1</td><td></td><td></td><td></td></tr>
+      <tr><td>1.1</td><td>Commit <code>.terraform.lock.hcl</code></td><td>Keep ignoring it</td><td>The lock file is what makes a provider pin reproducible on a fresh clone and in the CI static-analysis job. Ignoring it means each <code>init</code> re-resolves against the registry &mdash; the same failure class as the stale version pins from the site build. Upgrades become an explicit <code>-upgrade</code> commit instead of silent drift.</td></tr>
       <tr><td>1.2</td><td></td><td></td><td></td></tr>
       <tr><td>1.3</td><td></td><td></td><td></td></tr>
       <tr><td>1.4</td><td></td><td></td><td></td></tr>
