@@ -20,6 +20,15 @@ decision. `git add infra/platform/` stages only the `.tf` files,
 `terraform.tfvars.example`, and `.terraform.lock.hcl`; the real
 `terraform.tfvars` and `.terraform/` are both gitignored, verified 2026-08-07.
 
+**Re-apply `infra/platform/` with the raised budget.** Added 2026-08-17.
+`monthly_budget_usd` went from `"5"` to `"15"` in `variables.tf` and in the real
+`terraform.tfvars`, because the recipe app's Demo Variant adds $7.36 a month of
+standing cost and $5 would leave both notifications permanently fired. The
+reasoning and the price breakdown are in [[0003-terraform-topology]]'s
+2026-08-17 amendment. Nothing has been applied, so `platform/` currently has a
+pending diff of exactly one attribute. Do this before `stacks/recipe/`, not
+alongside it.
+
 ## Current status
 
 The Astro site is built, reviewed, merged, and pushed. **It is not deployed and
@@ -94,10 +103,13 @@ first: Terraform 1.15.8, aws-cli 2.36.17, `gh` authenticated as
 - **1.5** `aws_iam_openid_connect_provider` for GitHub Actions, with
   `client_id_list = ["sts.amazonaws.com"]` and **no `thumbprint_list`**.
 - **1.6** `aws_budgets_budget` at $5 monthly with both an `ACTUAL` 80% and a
-  `FORECASTED` 100% notification to `budget_email`.
+  `FORECASTED` 100% notification to `budget_email`. Raised to $15 on 2026-08-17
+  and not yet applied; see the top of this file.
 
 `terraform plan -detailed-exitcode` returns 0 on both `bootstrap/` and
-`platform/`, and `terraform fmt -check` is clean on both.
+`platform/`, and `terraform fmt -check` is clean on both. **True as of
+2026-08-07 only:** the 2026-08-17 budget raise means `platform/` now returns 2
+until it is re-applied.
 
 **Decision-log rows 1.4, 1.5, and 1.6 are filled in. Rows 1.1, 1.2, and 1.3 are
 still blank** and should be backfilled from the notes above.
@@ -127,6 +139,11 @@ worked through; the session ran hands-on instead of quiz-first by request.
   exists, this is worth doing.
 - **How is the HTML artifact generated?** Not recorded anywhere. Blocks the
   first item under "Do this first".
+- **Does ADR 0005 come back?** It was dropped on the premise that nothing public
+  needs compute, and the 2026-08-17 correction to spec 0001 breaks that premise.
+  The compute is a proxy instance in AWS rather than the home server the draft
+  was about, so the answer is not obvious. Settle it in the recipe app's
+  brainstorm.
 
 ## State the next phase depends on
 
@@ -229,6 +246,26 @@ disagreeing.
 **One plan claim remains unverified on purpose**: tfsec's maintenance status,
 which Unit 3.4 depends on. Confirm before repeating it. The other flagged claim,
 the OIDC thumbprint, is resolved above.
+
+## Carried into the recipe stack
+
+Not in scope for Sessions 2 or 3. Recorded here because both bind whoever writes
+the Terraform for `stacks/recipe/`, and both are the kind of default that reads
+fine in a plan and fails in a browser.
+
+- **us-east-1 excludes `use1-az3` from VPC origins.** It is the same zone already
+  excluded from RDS Proxy. Subnet placement has to avoid it, and zone *names* are
+  shuffled per account while zone *IDs* are not, so check the mapping with
+  `aws ec2 describe-availability-zones` rather than trusting the letter.
+- **CloudFront's origin retry defaults defeat the degraded mode.** Three attempts
+  at a ten-second timeout means a dead origin costs a visitor up to thirty
+  seconds before anything renders. The entire point of degrading to the static
+  bundle is that the page still arrives, so `connection_attempts` and
+  `connection_timeout` both come down on the `/api/*` behaviour.
+
+The Demo Variant's other open items, the Tailscale policy file and recipe ticket
+20 on whether a VPC origin serves an instance in a public subnet, belong in that
+app's own brainstorm and spec rather than here.
 
 ## Worth carrying into the infrastructure sessions
 

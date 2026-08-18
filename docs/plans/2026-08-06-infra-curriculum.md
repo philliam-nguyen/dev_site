@@ -513,7 +513,7 @@ variable "budget_email" {
 variable "monthly_budget_usd" {
   description = "Monthly cost threshold in USD."
   type        = string
-  default     = "5"
+  default     = "15"
 }
 ```
 
@@ -887,6 +887,14 @@ copy-paste, not after. The hard part is not whether to have a module, it is
 deciding what is a variable and what is hardcoded inside it — and spec 0001 is
 honest that **a module with one consumer is a guess**. The recipe app is the
 first real test.
+
+**Corrected 2026-08-17.** Spec 0001 used to call the recipe demo backendless. It
+is not: the Demo Variant is a Fastify API against Postgres. It is still the
+second consumer of `static-site`, because its bundle really does come from S3
+behind CloudFront, but it needs one thing the portfolio stack does not, which is
+a second cache behaviour routing `/api/*` to a separate origin. Decide the
+variable list below knowing that the second consumer wants an extra behaviour and
+a second origin, not just different strings in the same shape.
 
 Three candidate boundaries:
 
@@ -2423,6 +2431,13 @@ explainable months later, and it is worth more than the HCL.
 | 3.2 | | | |
 | 3.3 | | | |
 | 3.4 | | | |
+
+**Amendment, 2026-08-17.** Row 1.6 records what Session 1 decided and stays as
+written. The limit has since moved from `$5` to `$15`, because the recipe app's
+Demo Variant adds $7.36 a month of standing cost and row 1.6's rationale was
+priced against a real bill of roughly $0.50. The derivation is in
+[[0003-terraform-topology]]'s 2026-08-17 amendment. The rationale for the new
+number is not recorded in this table yet and is the author's to write.
 
 Any decision here that diverges from spec 0001 or an ADR needs the document
 amended, not just this table filled in. A decision log that contradicts the

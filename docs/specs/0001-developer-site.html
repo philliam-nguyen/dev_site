@@ -206,7 +206,9 @@ table.grid td.fail { color:var(--warn); font-family:var(--mono); font-size:.8rem
     <strong>Scope in:</strong> the Astro site, Terraform bootstrap and platform layers, a reusable
     <code>static-site</code> module, the portfolio stack, and the GitHub Actions deploy path.<br>
     <strong>Scope out:</strong> the recipe app, the RAG system, the capstones, and any compute or
-    database infrastructure. The RAG system links to its repository and is not deployed.
+    database infrastructure &mdash; an exclusion about this spec, not about the account, since
+    <code>stacks/recipe/</code> will run a <code>t4g.nano</code> against Postgres. The RAG system
+    links to its repository and is not deployed.
   </div>
 </section>
 
@@ -265,9 +267,12 @@ table.grid td.fail { color:var(--warn); font-family:var(--mono); font-size:.8rem
   </div>
 
   <p class="quiet" style="margin-top:16px">A fifth ADR on home-server hosting for dynamic apps was
-  drafted and then dropped. The recipe app already splits into a seeded demo with no backend, which
-  is static, and a live instance reachable only over Tailscale, which is private. Nothing public
-  needs compute, so the premise dissolved. ADR number 0005 stays retired; the next one is 0006.</p>
+  drafted and then dropped, on the premise that the recipe app split into a static seeded demo and a
+  private live instance reachable only over Tailscale, so nothing public needed compute.
+  <strong>That premise no longer holds:</strong> the Demo Variant is a Fastify API against Postgres.
+  Whether the ADR should be revived is open, since the compute involved is a proxy instance in AWS
+  rather than the home server the draft was about. ADR number 0005 stays retired for now; the next
+  one is 0006.</p>
 </section>
 
 <section id="visual">
@@ -374,8 +379,7 @@ table.grid td.fail { color:var(--warn); font-family:var(--mono); font-size:.8rem
 ├── bootstrap/          local state, run once by hand
 ├── platform/           zone lookup, ACM cert, OIDC provider, budget alarm
 ├── modules/
-│   ├── static-site/    bucket + OAC + distribution + record + deploy role
-│   └── lambda-app/     (later)
+│   └── static-site/    bucket + OAC + distribution + record + deploy role
 └── stacks/
     ├── portfolio/
     └── &lt;app&gt;/          one thin root module per app</code></pre>
@@ -554,15 +558,17 @@ dig +short &lt;domain&gt;                           # CloudFront edges</code></p
 </section>
 
 <details class="fold" id="future">
-  <summary>Known future directions<span class="count">4</span></summary>
+  <summary>Known future directions<span class="count">3</span></summary>
   <p class="quiet">Recorded so the current design does not fight them. None are in scope.</p>
   <ul class="items">
     <li>Hosted apps at their own subdomains, consuming platform outputs (ADR 0003).</li>
-    <li>The recipe app&rsquo;s <strong>demo mode</strong> (seeded data, no backend) as the second
-    consumer of <code>static-site</code>. That is the real test of whether the module&rsquo;s
-    boundaries are right, since a module with one consumer is a guess.</li>
-    <li>A <code>lambda-app</code> module alongside <code>static-site</code> if a public serverless
-    app ever arrives. Nothing currently planned needs one.</li>
+    <li>The recipe app&rsquo;s <strong>Demo Variant</strong> as the second consumer of
+    <code>static-site</code>. That is the real test of whether the module&rsquo;s boundaries are
+    right, since a module with one consumer is a guess. The demo is <em>not</em> backendless: it is
+    a Fastify API against Postgres where visitors add and delete recipes. It is still the second
+    consumer, because the bundle really does come from S3 behind CloudFront, but it needs one thing
+    the portfolio stack does not &mdash; a second cache behaviour routing <code>/api/*</code> to a
+    separate origin.</li>
     <li>A scheduled link checker once project entries carry external URLs worth rotting.</li>
   </ul>
 </details>

@@ -25,8 +25,10 @@ own brainstorm, spec, and plan.
 `static-site` module, the portfolio stack, and the GitHub Actions deploy path.
 
 **Out:** the recipe app, the RAG system, the capstone projects, and any compute
-or database infrastructure. The RAG system links to its GitHub repository and is
-not deployed.
+or database infrastructure. That last exclusion is about this spec, not about the
+account: nothing the developer site serves needs compute, and nothing described
+here provisions any, but `stacks/recipe/` will run a `t4g.nano` against Postgres.
+The RAG system links to its GitHub repository and is not deployed.
 
 ## Visual design
 
@@ -344,11 +346,15 @@ Recorded so the current design does not fight them. None are in scope.
 
 - Hosted apps at their own subdomains, consuming platform outputs
   ([[0003-terraform-topology]]).
-- The recipe app's demo mode (seeded data, no backend) as the second consumer of
-  `static-site`. That is the real test of whether the module's boundaries are
-  right, since a module with one consumer is a guess.
-- A `lambda-app` module alongside `static-site` if a public serverless app ever
-  arrives. Nothing currently planned needs one.
+- The recipe app's Demo Variant as the second consumer of `static-site`. That is
+  the real test of whether the module's boundaries are right, since a module with
+  one consumer is a guess, and the conclusion survives a correction to the
+  premise: the demo is not backendless. It is a Fastify API against Postgres
+  where visitors add and delete recipes. It is still the second consumer, because
+  the bundle really does come from S3 behind CloudFront, but it needs one thing
+  the portfolio stack does not, which is a second cache behaviour routing
+  `/api/*` to a separate origin. Worth knowing while Unit 2.1 decides which
+  values are module variables and which are hardcoded house style.
 - A scheduled link checker once project entries carry external URLs worth
   rotting.
 
