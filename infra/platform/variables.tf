@@ -9,7 +9,7 @@ variable "budget_email" {
 }
 
 variable "monthly_budget_usd" {
-  description = "Monthly budget in USD."
+  description = "Monthly budget in USD. Covers every stack in the account, not just the site. Re-derive when a stack adds standing cost; see ADR 0003's 2026-08-17 amendment."
   type        = string
-  default     = "5"
+  default     = "15"
 }

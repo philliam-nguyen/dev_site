@@ -33,8 +33,7 @@ infra/
 ├── bootstrap/          local state, run once
 ├── platform/           zone lookup, ACM cert, OIDC provider, budget alarm
 ├── modules/
-│   ├── static-site/    bucket + OAC + distribution + record + deploy role
-│   └── lambda-app/     (later)
+│   └── static-site/    bucket + OAC + distribution + record + deploy role
 └── stacks/
     ├── portfolio/
     └── <app>/          one thin root module per app
@@ -76,8 +75,9 @@ something region-sensitive appears.
 
 ## Consequences
 
-- One hosted zone at roughly $0.50 a month covers every subdomain. It is the only
-  guaranteed recurring AWS charge.
+- One hosted zone at roughly $0.50 a month covers every subdomain. It was the
+  only guaranteed recurring AWS charge; superseded by the 2026-08-17 amendment
+  below.
 - One certificate carries both the apex and `*.domain`, because a wildcard does
   not match the apex.
 - The platform stack becomes a dependency of every app stack. Changing its
@@ -115,3 +115,60 @@ changing it breaks every app stack.
 
 No app stack can plan before `platform/` has been applied. That already held for
 the certificate ARN and the OIDC provider ARN, so this adds no new coupling.
+
+## Amendment, 2026-08-17: there is no `lambda-app` module
+
+The topology sketch above listed `modules/lambda-app/` as `(later)`. It has been
+removed, and it is not coming back.
+
+**Decision.** No `lambda-app` module. The recipe app was the only candidate and
+it is not serverless. Nothing else on the list is either: the two capstones have
+no design yet, and the RAG system links to its repository and is never deployed.
+
+What `stacks/recipe/` actually needs is a `static-site` call plus a small proxy
+instance, a security group, and a DNS record. Whether that second part becomes a
+module is governed by the rule this ADR already sets, extract before the second
+copy-paste, and nothing currently wants a second copy. It stays inline in the
+stack until something does.
+
+**Why remove the entry rather than leave it.** A named-but-empty module slot is
+an invitation for the next app to be shaped to fit the name instead of the name
+being chosen for the app. `(later)` was a guess about which compute model would
+arrive first, and the guess was wrong.
+
+## Amendment, 2026-08-17: the recurring-charge floor moved
+
+The consequence above held while every stack was static. It stops holding when
+`stacks/recipe/` applies. The Demo Variant runs a proxy instance, and its
+standing monthly cost is $7.36, priced against the AWS Price List on 2026-08-17:
+
+| Item | Monthly |
+|---|---|
+| `t4g.nano` | $3.07 |
+| Public IPv4 address | $3.65 |
+| 8 GB `gp3` volume | $0.64 |
+| EC2-to-CloudFront data transfer | $0.00 |
+| VPC origin | $0.00 |
+
+The public address costs more than the instance it is attached to, which is the
+number to remember before anything reaches for a second one.
+
+**Decision.** `monthly_budget_usd` moves from `"5"` to `"15"`, and it moves
+*before* `stacks/recipe/` is applied, not after. Against a floor of roughly
+$7.86 a $5 limit puts both notifications, `ACTUAL` at 80% and `FORECASTED` at
+100%, into a permanently fired state within the first week. An alarm that is
+always on is not an alarm, and the failure is worse than having no budget,
+because it teaches the reader to delete the mail unread.
+
+$15 preserves what the original $5 was actually for: roughly twice the expected
+bill, so an anomaly is visible well before it is expensive.
+
+**Consequences.**
+
+Raising the limit is a `platform/` change, and `platform/` is already applied, so
+this lands as a pending diff until it is re-applied. It must be re-applied before
+the recipe stack, not alongside it.
+
+The threshold is now a number that has to be re-derived whenever a stack adds
+standing cost, rather than a constant. The derivation belongs here, in this
+amendment, so the next revision has something to compare against.
