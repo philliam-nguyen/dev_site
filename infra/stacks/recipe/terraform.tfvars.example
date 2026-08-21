@@ -1,0 +1,3 @@
+# host:port of the Demo Variant API on the tailnet. The real value is the demo
+# sidecar's tailnet IP; see variable.tf for why an IP rather than a MagicDNS name.
+demo_upstream = "100.0.0.0:8080"

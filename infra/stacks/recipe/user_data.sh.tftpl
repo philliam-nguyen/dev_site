@@ -1,0 +1,65 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf install -y nginx
+curl -fsSL https://tailscale.com/install.sh | sh
+
+systemctl enable --now tailscaled
+
+# Tailscale comes up before nginx: the proxy's upstream lives on the tailnet,
+# and --ssh here is the only management path this instance has.
+# set +x while the key is in play: xtrace expands values into
+# /var/log/cloud-init-output.log, which is how the first key leaked.
+set +x
+AUTH_KEY="$(aws ssm get-parameter --region ${region} --name ${ssm_param} --with-decryption --query Parameter.Value --output text)"
+tailscale up --authkey "$AUTH_KEY" --ssh --hostname=meal-prep-proxy
+unset AUTH_KEY
+set -x
+
+# Full overwrite rather than a conf.d drop-in: the distro nginx.conf owns
+# listen 80 default_server, and a drop-in would lose the match to it,
+# serving the welcome page to CloudFront.
+cat > /etc/nginx/nginx.conf <<'NGINX'
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    access_log /var/log/nginx/access.log;
+
+    server {
+        listen 80 default_server;
+
+        location /api/ {
+            # No URI on proxy_pass: the path reaches the API unchanged,
+            # exactly as tailscale serve delivers it in the Homelab Variant.
+            proxy_pass http://${demo_upstream};
+
+            # A dead homelab must answer 502 in ~2s, not 30s, or the
+            # degraded mode of ticket 22 is never seen.
+            proxy_connect_timeout 2s;
+            proxy_send_timeout    3s;
+            proxy_read_timeout    3s;
+
+            proxy_set_header Host $host;
+            # Append, never replace: TRUST_PROXY=2 counts on CloudFront's
+            # entry surviving, or every visitor shares one rate-limit bucket.
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto https;
+        }
+
+        location / {
+            return 404;
+        }
+    }
+}
+NGINX
+
+systemctl enable --now nginx
