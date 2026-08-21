@@ -1,47 +1,43 @@
 # Progress
 
 Living state for the developer site. Update this rather than reading git
-archaeology. Current as of 2026-08-07. Last commit on `main` is `567e20d`
-(bootstrap state bucket). Uncommitted: this file, the amended curriculum plan,
-the stale HTML artifact, and an untracked `infra/platform/`.
+archaeology. Current as of 2026-08-21. Last commit on `main` is `a796ebe`
+(recipe stack demo variant terraform); this docs pass is uncommitted on top of
+it.
 
 ## Do this first, next session
 
-**Regenerate `docs/html_artifacts/2026-08-06-infra-curriculum.html`.** It was
-already modified and uncommitted before 2026-08-07, and the source markdown has
-since changed underneath it: Unit 1.5's trade-off brief was rewritten, its build
-steps and reference config were changed, its verify section gained two commands,
-and decision-log rows 1.4 through 1.6 were filled in. The generation method is
-not recorded anywhere. Find it, note it here, then regenerate.
+**Delete `~/.aws/credentials.bak.20260807`.** It holds the dead
+`terraform-tester` secret (verified 2026-08-21: the file differs from the live
+credentials, so it is the backup, not the active profile). An assistant attempt
+to delete it was blocked by the permission classifier, so it has to be removed
+by hand: `rm ~/.aws/credentials.bak.20260807`.
 
-**Commit `infra/platform/`** if it is still untracked. The message the plan
-specifies is at the end of Unit 1.6, plus a paragraph on the thumbprint
-decision. `git add infra/platform/` stages only the `.tf` files,
-`terraform.tfvars.example`, and `.terraform.lock.hcl`; the real
-`terraform.tfvars` and `.terraform/` are both gitignored, verified 2026-08-07.
-
-**Re-apply `infra/platform/` with the raised budget.** Added 2026-08-17.
-`monthly_budget_usd` went from `"5"` to `"15"` in `variables.tf` and in the real
-`terraform.tfvars`, because the recipe app's Demo Variant adds $7.36 a month of
-standing cost and $5 would leave both notifications permanently fired. The
-reasoning and the price breakdown are in [[0003-terraform-topology]]'s
-2026-08-17 amendment. Nothing has been applied, so `platform/` currently has a
-pending diff of exactly one attribute. Do this before `stacks/recipe/`, not
-alongside it.
+**Push and tidy the recipe repo.** `../recipe_site` has its `main` one commit
+ahead of origin (the whole ticket-25 runbook section), and a seven-item
+doc-consistency backlog sitting in its gitignored `.scratch/doc-consistency/`,
+invisible to anyone reading the committed docs. That work belongs to that repo's
+own session; recorded here so it is not forgotten.
 
 ## Current status
 
-The Astro site is built, reviewed, merged, and pushed. **It is not deployed and
-not reachable by anyone.**
+**The recipe app's Demo Variant is live at
+`https://meal-prep.phillip-nguyen.dev` and the portfolio site is not deployed.**
+The second project shipped before the first. The Astro site is built, reviewed,
+merged, and pushed, but nothing serves it: `https://phillip-nguyen.dev` does not
+answer.
 
-Spec 0001 covers two halves: the site, and the AWS infrastructure that serves it.
-The site half is done. The infrastructure half is now under way: Session 1 of
-the curriculum is complete, which means the state bucket, the certificate, the
-OIDC provider, and the budget alarm all exist. There is still no distribution,
-no bucket for the site itself, and no deploy workflow.
+All three Terraform roots are applied and clean. Verified 2026-08-21:
+`terraform plan -detailed-exitcode` returns 0 on `platform/` (so the $15 budget
+raise from 2026-08-17 has been applied) and on `stacks/recipe/`. The full demo
+path works end to end: `GET /api/state` returns 200 in under half a second,
+which means CloudFront → VPC origin → EC2 proxy → Tailscale → homelab Postgres
+is all up, and the degraded mode has been observed to kick in when the homelab
+is down.
 
-Of the spec's eight success criteria, 4 through 7 are met. Criteria 1, 2, 3, and
-8 all describe a deployed site and remain unmet. Sessions 2 and 3 close them.
+Of spec 0001's eight success criteria, 4 through 7 are met, and 8 is now met
+for the stacks that exist. Criteria 1, 2, and 3 describe the deployed portfolio
+site and remain unmet. Sessions 2 and 3 of the curriculum close them.
 
 ## Done
 
@@ -72,13 +68,11 @@ deliberate rather than fixed, so they should not be re-raised as defects:
   Dark uses `#f6832f` for both and shows no split.
 
 **The infrastructure curriculum plan is written**, at
-`docs/plans/2026-08-06-infra-curriculum.md`. Three sessions, seventeen build
-units, a quiz per session with an answer key, and a decision log to fill in
-while building.
+`docs/plans/2026-08-06-infra-curriculum.md`, and carries a 2026-08-21 amendment
+reconciling it with the recipe stack having shipped first.
 
 **ADR 0003 gained an amendment on 2026-08-06** fixing where the domain name
-lives: `platform/` declares it as a variable and re-exports it as an output, and
-app stacks read it from `terraform_remote_state` rather than each holding a copy.
+lives, and another on 2026-08-17 raising the budget to $15.
 
 ### Session 1 of the curriculum, complete 2026-08-07
 
@@ -102,48 +96,78 @@ first: Terraform 1.15.8, aws-cli 2.36.17, `gh` authenticated as
   `allow_overwrite = true`, and the wait resource. Certificate is `ISSUED`.
 - **1.5** `aws_iam_openid_connect_provider` for GitHub Actions, with
   `client_id_list = ["sts.amazonaws.com"]` and **no `thumbprint_list`**.
-- **1.6** `aws_budgets_budget` at $5 monthly with both an `ACTUAL` 80% and a
-  `FORECASTED` 100% notification to `budget_email`. Raised to $15 on 2026-08-17
-  and not yet applied; see the top of this file.
+- **1.6** `aws_budgets_budget` monthly with both an `ACTUAL` 80% and a
+  `FORECASTED` 100% notification to `budget_email`. Originally $5; raised to
+  $15 on 2026-08-17 and applied (verified 2026-08-21).
 
-`terraform plan -detailed-exitcode` returns 0 on both `bootstrap/` and
-`platform/`, and `terraform fmt -check` is clean on both. **True as of
-2026-08-07 only:** the 2026-08-17 budget raise means `platform/` now returns 2
-until it is re-applied.
+**Decision-log rows 1.4, 1.5, and 1.6 are filled in. Rows 1.1 through 1.3 are
+blank and stay blank for now**: the per-unit decision log has been retired in
+favor of a retrospective exercise. See "Next".
 
-**Decision-log rows 1.4, 1.5, and 1.6 are filled in. Rows 1.1, 1.2, and 1.3 are
-still blank** and should be backfilled from the notes above.
+### The recipe stack, shipped 2026-08-21
+
+`infra/stacks/recipe/` was written and applied outside the curriculum, ahead of
+Sessions 2 and 3, and is live. It is standalone HCL, not a `static-site` module
+consumer. What it provisions: a VPC with one public subnet (AZ pinned by ID to
+avoid `use1-az3`), a `t4g.nano` AL2023 arm64 proxy instance running nginx plus
+`tailscaled`, a CloudFront distribution with two origins (S3 for the bundle, a
+VPC origin at the instance for `/api/*`), the frontend bucket behind OAC, DNS,
+and the `meal-prep-deploy` OIDC role.
+
+The app itself lives in `../recipe_site` (GitHub:
+`philliam-nguyen/meal-prep-app`) with its own spec, eleven ADRs, two research
+docs, and a runbook. Its backend and Postgres run on the homelab and are reached
+over Tailscale; the AWS footprint is only the ingress. Standing cost is
+$7.37/month, which is what drove the budget raise. See
+`infra/stacks/recipe/README.md` for the split of responsibilities and the CI
+contract between the two repos.
+
+Two carry-forward items recorded here earlier are closed and honored in the
+shipped stack: `use1-az3` is avoided, and the CloudFront retry defaults are
+lowered on the `/api/*` behaviour (plus 2–3s upstream timeouts in nginx) so a
+dead homelab degrades in seconds, not thirty. The two items deferred to the
+app's own process are also settled there: the Tailscale policy file exists and
+is versioned at `recipe_site/ops/tailnet/policy.hujson`, and recipe ticket 20
+(a CloudFront VPC origin serving an instance in a public subnet) was tested
+live on 2026-08-18 and works, with no certificate needed on the instance.
 
 ## In progress
 
-Nothing mid-flight. Session 1 closed cleanly. Quiz 1 in the plan has not been
-worked through; the session ran hands-on instead of quiz-first by request.
+A docs reconciliation pass, 2026-08-21: this file, the curriculum plan
+amendment, the spec 0001 amendment, the root `README.md`, and
+`infra/stacks/recipe/README.md`. The stale HTML artifact
+`docs/html_artifacts/2026-08-06-infra-curriculum.html` and
+`docs/specs/0001-developer-site.html` were both deleted rather than
+regenerated: neither had a recorded generation method, and the markdown is the
+source of truth.
 
 ## Next
 
-1. **Regenerate the HTML artifact and commit `infra/platform/`.** See the top of
-   this file.
-2. **Session 2**: the `static-site` module and the portfolio stack. Then
-   **Session 3**: the GitHub Actions deploy path. The plan is author-built with
-   coaching per spec 0001's implementation split, so it must not be dispatched
-   to subagents.
-3. **Then the other projects.** The recipe app and the two capstones each get
-   their own brainstorm, spec, and plan. The RAG system links to its repository
-   and needs no infrastructure.
+1. **Session 2**: the `static-site` module and the portfolio stack. Then
+   **Session 3**: the GitHub Actions deploy path. Both still author-built with
+   coaching per spec 0001's implementation split, so they must not be dispatched
+   to subagents. Read them against the shipped recipe stack as a reference
+   implementation; the plan's 2026-08-21 amendment says how.
+2. **The decision-log retrospective.** The fill-in-as-you-go log did not work.
+   Replacement: a dedicated session walking through the reasoning behind what
+   was actually built (Session 1's units and the recipe stack), where the
+   author writes the entries themselves with the assistant as coach. Rows 1.1
+   through 1.3 and the $15 rationale get written then.
+3. **The recipe repo's own docs pass**: push the unpushed commit, work the
+   seven-item consistency backlog. Separate session, that repo.
+4. **Then the other projects.** The RAG system links to its repository and
+   needs no infrastructure. The capstones each get their own brainstorm, spec,
+   and plan.
 
 ## Open questions
 
-- **Root `README`?** The repository landing page is currently blank.
-  `site/README.md` covers the commands and the content model, but a root README
-  would want to describe `site/` and `infra/` together. Now that `infra/`
-  exists, this is worth doing.
-- **How is the HTML artifact generated?** Not recorded anywhere. Blocks the
-  first item under "Do this first".
-- **Does ADR 0005 come back?** It was dropped on the premise that nothing public
-  needs compute, and the 2026-08-17 correction to spec 0001 breaks that premise.
-  The compute is a proxy instance in AWS rather than the home server the draft
-  was about, so the answer is not obvious. Settle it in the recipe app's
-  brainstorm.
+- ~~Root README?~~ Written 2026-08-21.
+- ~~How is the HTML artifact generated?~~ Never recorded; the artifact was
+  deleted 2026-08-21 instead of regenerated.
+- ~~Does ADR 0005 come back?~~ No. The compute decision has its own record in
+  the recipe repo (ADR 0008, demo backend on the homelab, plus research doc
+  0002 on the ingress). Spec 0001's scope note and the curriculum amendment
+  point there; a main_site ADR would duplicate it.
 
 ## State the next phase depends on
 
@@ -152,8 +176,9 @@ worked through; the session ran hands-on instead of quiz-first by request.
   `Z10293412YBU8AYXC0SF0`, account `975050064267`. This is `var.domain_name` in
   `platform/`, and app stacks read it back from the platform output rather than
   declaring copies, per the ADR 0003 amendment.
-- **`platform/` now publishes four outputs**, and per ADR 0003 changing any of
-  them is a breaking change for every app stack:
+- **`platform/` publishes four outputs**, and per ADR 0003 changing any of
+  them is a breaking change for every app stack. `stacks/recipe/` now consumes
+  them in anger, so this is no longer theoretical:
   - `zone_id` = `Z10293412YBU8AYXC0SF0`
   - `domain_name` = `phillip-nguyen.dev`
   - `certificate_arn` = `arn:aws:acm:us-east-1:975050064267:certificate/0019c868-7bf0-4db6-8b63-acd6eeb9e657`
@@ -170,24 +195,20 @@ worked through; the session ran hands-on instead of quiz-first by request.
 - **`bootstrap/terraform.tfstate` is on this laptop only**, per ADR 0003. If the
   laptop dies the bucket survives (`prevent_destroy`, nothing else manages it)
   and recovery is `terraform import` on a fresh clone, not a rebuild.
-- **The local AWS credential was replaced on 2026-08-07.** Profile `phil`
-  (region `us-east-1`) backs `arn:aws:iam::975050064267:user/dev-site-admin`,
-  created for this project and tagged `Project=dev-site`,
-  `Purpose=local-terraform-apply`. It carries `AdministratorAccess` and is the
-  only admin principal in the account. It exists solely for `terraform apply`
-  from the laptop; the deploy path in Sessions 2 and 3 uses OIDC and never
-  touches it. There is no `default` profile, so `AWS_PROFILE=phil` must be set
-  or commands fail with "No valid credential sources found". The previous
-  credential, `terraform-tester`, was an unrelated admin user left over from a
-  2025 lesson with a 16-month-old access key of unknown provenance. Its key was
-  deleted, its policy detached, and the user removed. A backup of the old
-  credentials file sits at `~/.aws/credentials.bak.20260807` and holds the
-  now-dead secret; **delete it.** IAM Identity Center is not enabled in this
-  account and remains the better endpoint once the first applies are done.
-- **The old lesson left no infrastructure behind.** No CloudFront
-  distributions, no customer-managed IAM roles, no state buckets. One unrelated
-  leftover remains and was deliberately left alone: `pinpix-user` and
-  `pinpix-bucket` from 2024, scoped to a single-bucket policy.
+- **The local AWS credential is profile `phil`** (region `us-east-1`), backing
+  `arn:aws:iam::975050064267:user/dev-site-admin`, created for this project and
+  tagged `Project=dev-site`, `Purpose=local-terraform-apply`. It carries
+  `AdministratorAccess` and is the only admin principal in the account. It
+  exists solely for `terraform apply` from the laptop; the deploy paths use
+  OIDC and never touch it. There is no `default` profile, so `AWS_PROFILE=phil`
+  must be set or commands fail with "No valid credential sources found". The
+  predecessor `terraform-tester` user was removed 2026-08-07; the backup file
+  holding its dead secret still needs deleting (see the top of this file). IAM
+  Identity Center is not enabled in this account and remains the better
+  endpoint now that the first applies are done.
+- **The old lesson left no infrastructure behind.** One unrelated leftover
+  remains and was deliberately left alone: `pinpix-user` and `pinpix-bucket`
+  from 2024, scoped to a single-bucket policy.
 - **`.dev` is HSTS-preloaded at the TLD level**, which sharpens Unit 2.3's
   `preload = false` decision: submission to the preload list is redundant
   because browsers already force HTTPS on every `.dev` host. The
@@ -195,10 +216,11 @@ worked through; the session ran hands-on instead of quiz-first by request.
   `includeSubDomains`. Confirm against the current preload list before
   repeating the claim.
 - **The OIDC trust policy value is fixed** by the repository name:
-  `repo:philliam-nguyen/dev_site:ref:refs/heads/main`. Renaming the repo breaks
-  deploys until Terraform is re-applied. The provider accepts the audience
-  (`sts.amazonaws.com`); the role's trust policy is what constrains repo and
-  branch, and that is built in Session 2.
+  `repo:philliam-nguyen/dev_site:ref:refs/heads/main` for the portfolio deploy
+  role built in Session 2. The live example to crib from is
+  `stacks/recipe/deploy.tf`, whose subject is
+  `repo:philliam-nguyen/meal-prep-app:ref:refs/heads/main`. Renaming either
+  repo breaks its deploys until Terraform is re-applied.
 - **Four build outputs are inputs to the Terraform work.** They live in spec
   0001 under "Carried into the Terraform plan": two unhashed assets that will
   land in the immutable cache pass, `build.inlineStylesheets` needing a pin
@@ -226,46 +248,8 @@ disagreeing.
   tfsec is being folded into Trivy. Unit 3.4 flags this as needing a check
   before the choice is made.
 
-## Where the build diverged from the plan
-
-- **Unit 1.5 drops `thumbprint_list` entirely.** The plan offered two options,
-  hardcoding the fingerprint or reading it at plan time with
-  `data "tls_certificate"`, and flagged as unverified the claim that the API
-  still requires the field. **Verified 2026-08-07: that claim was wrong.** IAM
-  verifies the OIDC endpoint's TLS certificate against its own library of
-  trusted root CAs and consults the thumbprint only as a fallback, for issuers
-  outside that library, when the certificate cannot be retrieved, or when TLS
-  1.3 is required. GitHub's issuer is covered, so the value has no consumer.
-  `CreateOpenIDConnectProvider` treats it as optional, and the AWS provider
-  declares it `Optional: true, Computed: true`, so omitting it stores AWS's
-  derived value rather than leaving a permanent diff. Confirmed in practice:
-  `length(ThumbprintList)` returns 1 with nothing supplied, and
-  `plan -detailed-exitcode` still returns 0. The plan's Unit 1.5 has been
-  rewritten to match, and the `hashicorp/tls` provider is never added.
-
 **One plan claim remains unverified on purpose**: tfsec's maintenance status,
-which Unit 3.4 depends on. Confirm before repeating it. The other flagged claim,
-the OIDC thumbprint, is resolved above.
-
-## Carried into the recipe stack
-
-Not in scope for Sessions 2 or 3. Recorded here because both bind whoever writes
-the Terraform for `stacks/recipe/`, and both are the kind of default that reads
-fine in a plan and fails in a browser.
-
-- **us-east-1 excludes `use1-az3` from VPC origins.** It is the same zone already
-  excluded from RDS Proxy. Subnet placement has to avoid it, and zone *names* are
-  shuffled per account while zone *IDs* are not, so check the mapping with
-  `aws ec2 describe-availability-zones` rather than trusting the letter.
-- **CloudFront's origin retry defaults defeat the degraded mode.** Three attempts
-  at a ten-second timeout means a dead origin costs a visitor up to thirty
-  seconds before anything renders. The entire point of degrading to the static
-  bundle is that the page still arrives, so `connection_attempts` and
-  `connection_timeout` both come down on the `/api/*` behaviour.
-
-The Demo Variant's other open items, the Tailscale policy file and recipe ticket
-20 on whether a VPC origin serves an instance in a public subnet, belong in that
-app's own brainstorm and spec rather than here.
+which Unit 3.4 depends on. Confirm before repeating it.
 
 ## Worth carrying into the infrastructure sessions
 
@@ -285,6 +269,12 @@ that only a documentation check caught, and the duplicate validation record in
 Unit 1.4 showed up as two `for_each` instances sharing one resource ID in the
 refresh output, which is the concrete form of the collision `allow_overwrite`
 prevents.
+
+The recipe project bore it out a third time, at larger scale: its docs repo
+accumulated seven consistency defects between what the ADRs said and what
+actually shipped, all catalogued but none yet fixed. The lesson generalizes:
+docs written before the build go stale the moment the build teaches you
+something, and the fix is a reconciliation pass, not better foresight.
 
 ## Open question the plan raises
 

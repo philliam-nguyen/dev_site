@@ -27,8 +27,37 @@ is the reusable unit: bucket, OAC, distribution, DNS, deploy role.
 it once. Deploys run from GitHub Actions against a role assumed through OIDC;
 Terraform never runs in CI.
 
-**Tech Stack:** Terraform 1.10+, AWS provider, `tls` provider (OIDC thumbprint),
-GitHub Actions, AWS CLI v2, PowerShell for the local deploy script.
+**Tech Stack:** Terraform 1.10+, AWS provider, GitHub Actions, AWS CLI v2,
+PowerShell for the local deploy script. (The `tls` provider was in the original
+list for the OIDC thumbprint; Unit 1.5 resolved that the thumbprint is not
+required and the provider was never added.)
+
+---
+
+## Amendment, 2026-08-21: the recipe stack shipped first
+
+The recipe app's Demo Variant went live at `meal-prep.phillip-nguyen.dev`
+outside this curriculum. `infra/stacks/recipe/` was written as standalone HCL,
+applied, and verified drift-free. The sessions below stand as written, read
+with three corrections:
+
+1. **Unit 2.1's premise is dead.** The recipe app is not the `static-site`
+   module's second consumer and will not be retrofitted: it is live, and
+   churning working infrastructure to satisfy a sentence in a spec is
+   backwards. The module boundary question is answered by *extraction* instead
+   of prediction: Session 2 writes the portfolio stack as the account's second
+   CloudFront-plus-S3 shape, and per [[0003-terraform-topology]]'s rule that a
+   module gets extracted before the second copy-paste, Unit 2.1's variable
+   list is decided by diffing against `stacks/recipe/` — what the two stacks
+   genuinely share is the module, what differs is a variable.
+2. **The sessions gain a reference implementation.** The OIDC deploy role
+   pattern Session 3 builds already exists in `stacks/recipe/deploy.tf`
+   (subject `repo:philliam-nguyen/meal-prep-app:ref:refs/heads/main`), and a
+   working CI deploy (OIDC assume, S3 sync, CloudFront invalidation) runs in
+   the meal-prep-app repo. Same discipline as the per-unit rule: write yours
+   first, then diff.
+3. **The decision log is retired as a per-unit mechanism.** See the amendment
+   at the log itself.
 
 ---
 
@@ -895,6 +924,13 @@ behind CloudFront, but it needs one thing the portfolio stack does not, which is
 a second cache behaviour routing `/api/*` to a separate origin. Decide the
 variable list below knowing that the second consumer wants an extra behaviour and
 a second origin, not just different strings in the same shape.
+
+**Amended 2026-08-21.** The paragraph above is itself superseded: the Demo
+Variant shipped as standalone HCL in `stacks/recipe/` and does not consume this
+module. The trade-off brief below still stands, but the second-consumer
+evidence now comes from diffing the candidate variable list against the live
+recipe stack rather than predicting its needs. See the amendment at the top of
+this plan.
 
 Three candidate boundaries:
 
@@ -2438,6 +2474,15 @@ Demo Variant adds $7.36 a month of standing cost and row 1.6's rationale was
 priced against a real bill of roughly $0.50. The derivation is in
 [[0003-terraform-topology]]'s 2026-08-17 amendment. The rationale for the new
 number is not recorded in this table yet and is the author's to write.
+
+**Amendment, 2026-08-21.** The fill-in-during-the-session mechanism is retired.
+It did not work: rows 1.1 through 1.3 were never written, and an entry written
+after the fact by someone other than the author defeats the purpose stated
+above. The replacement is a retrospective session: walk the infrastructure that
+actually got built (Session 1's units, then the recipe stack), talk through the
+reasoning behind each decision, and the author writes the entries themselves
+with the assistant as coach. The table stays as the target format; the blank
+rows and the $15 rationale get written in that session, not before.
 
 Any decision here that diverges from spec 0001 or an ADR needs the document
 amended, not just this table filled in. A decision log that contradicts the
