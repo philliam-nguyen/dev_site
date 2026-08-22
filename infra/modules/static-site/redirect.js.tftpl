@@ -1,0 +1,21 @@
+// $${apex} is Terraform template interpolation, not JavaScript. The function
+// body uses string concatenation rather than template literals so the two
+// syntaxes cannot collide.
+// Known limit, accepted: the redirect drops the query string. This site takes
+// no query parameters; a future consumer that does fixes it here.
+function handler(event) {
+  var request = event.request;
+  var host = request.headers.host.value;
+
+  if (host === '${apex}') {
+    return request;
+  }
+
+  return {
+    statusCode: 301,
+    statusDescription: 'Moved Permanently',
+    headers: {
+      location: { value: 'https://${apex}' + request.uri }
+    }
+  };
+}
