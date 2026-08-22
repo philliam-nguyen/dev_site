@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Wordmark from '../components/Wordmark.astro';
@@ -10,7 +11,7 @@ import { sortProjects } from '../lib/sortProjects';
 
 const site = await getEntry('site', 'site');
 if (!site) throw new Error('src/content/site.yml is missing');
-const { name, role, portraitInitials, eyebrowLeft, eyebrowRight, badges, links } = site.data;
+const { name, role, portrait, portraitInitials, eyebrowLeft, socials, badges, links } = site.data;
 
 const about = await getEntry('about', 'about');
 if (!about) throw new Error('src/content/about.md is missing');
@@ -20,10 +21,15 @@ const projects = sortProjects(await getCollection('projects'));
 const allPlaceholder = projects.every(p => p.data.placeholder);
 ---
 <Base title={name} description={role}>
-  <Eyebrow left={eyebrowLeft} right={eyebrowRight} />
+  <Eyebrow left={eyebrowLeft} socials={socials} />
 
-  <header class="head">
-    <div class="portrait"><span>{portraitInitials}</span></div>
+  <header class:list={['head', { 'head--solo': !portrait }]}>
+    {portrait && (
+      <div class="portrait">
+        <Image src={portrait} alt={name} width={208} height={240} />
+        <span>{portraitInitials}</span>
+      </div>
+    )}
     <div>
       <Wordmark name={name} />
       <p class="role">{role}</p>

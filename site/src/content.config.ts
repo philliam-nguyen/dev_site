@@ -4,12 +4,16 @@ import { z } from 'astro/zod';
 
 const site = defineCollection({
   loader: glob({ pattern: 'site.yml', base: './src/content' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     name: z.string(),
     role: z.string(),
+    portrait: image().optional(),
     portraitInitials: z.string().max(3),
     eyebrowLeft: z.string(),
-    eyebrowRight: z.string(),
+    socials: z.array(z.object({
+      icon: z.enum(['github', 'linkedin']),
+      href: z.url({ protocol: /^https$/ }),
+    })).default([]),
     badges: z.array(z.object({
       text: z.string(),
       kind: z.enum(['default', 'accent']).default('default'),

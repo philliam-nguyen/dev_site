@@ -1,8 +1,12 @@
 name: Phil Nguyen
-role: One line about what you do. Edit this in src/content/site.yml.
+role: Engineer
 portraitInitials: PN
 eyebrowLeft: PORTFOLIO // IT & SOFTWARE
-eyebrowRight: "2026"
+socials:
+  - icon: github
+    href: https://github.com/philliam-nguyen
+  - icon: linkedin
+    href: https://www.linkedin.com/in/phillnguyen
 badges:
   - text: Infrastructure
     kind: accent
