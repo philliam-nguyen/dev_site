@@ -1,0 +1,49 @@
+name: terraform
+
+on:
+  push:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/terraform.yml'
+      - '.trivyignore'
+  pull_request:
+    paths:
+      - 'infra/**'
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.15.8'
+
+      - name: Format check
+        run: terraform fmt -check -recursive infra/
+
+      # -backend=false is what lets validate run without credentials: it
+      # installs providers and checks the configuration without touching
+      # remote state.
+      - name: Validate each root
+        run: |
+          for dir in infra/bootstrap infra/platform infra/modules/static-site infra/stacks/portfolio infra/stacks/recipe; do
+            echo "== $dir"
+            terraform -chdir="$dir" init -backend=false
+            terraform -chdir="$dir" validate
+          done
+
+      # Findings at HIGH/CRITICAL fail the push. Accepted findings live in
+      # .trivyignore at the repo root, each with its reason.
+      - name: Security scan
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: config
+          scan-ref: infra/
+          trivyignores: .trivyignore
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'

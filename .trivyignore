@@ -1,0 +1,31 @@
+# Accepted trivy config findings, with reasons. Each entry is a ruling per
+# the Unit 3.4 discipline: fixed, or accepted with the reason written down.
+# Revisit when the architecture changes (a WAF, a KMS budget, a second AZ).
+
+# AWS-0011 (HIGH): CloudFront distribution has no WAF.
+# Accepted: static site and demo ingress, GET/HEAD only, no auth, no user
+# data. A WAF's monthly cost exceeds the entire site's standing cost.
+AVD-AWS-0011
+
+# AWS-0132 (HIGH): S3 buckets use SSE-S3 (AES256) rather than a customer
+# managed KMS key. Accepted: the buckets hold public site bytes and Terraform
+# state in a single-admin account; CMK rotation and key policy management add
+# cost and a lockout failure mode with no confidentiality gain here.
+AVD-AWS-0132
+
+# AWS-0104 (CRITICAL): recipe proxy security group allows egress to 0.0.0.0/0
+# on 80/443/3478/41641. Accepted: Tailscale control plane, DERP relays, and
+# package mirrors have no stable published CIDR set; each rule is
+# port-scoped and documented in stacks/recipe/instance.tf.
+AVD-AWS-0104
+
+# AWS-0131 (HIGH): recipe proxy root volume is not encrypted. Accepted for
+# now: t4g.nano ingress proxy holding no data at rest beyond the OS; fixing
+# it forces instance replacement on a live demo. Candidate fix at the next
+# instance rebuild: root_block_device { encrypted = true }.
+AVD-AWS-0131
+
+# AWS-0164 (HIGH): recipe public subnet auto-assigns public IPs. Accepted:
+# the subnet exists to host the internet-facing ingress proxy; that is its
+# job, and nothing else launches there.
+AVD-AWS-0164

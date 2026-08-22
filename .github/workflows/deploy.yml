@@ -1,0 +1,92 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# Queue, never cancel: a deploy killed between sync passes leaves the bucket
+# in a mixed state. Two rapid pushes deploy in order and the second wins.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: site
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12'
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+
+      # npm ci does not download browsers, and test:a11y needs one.
+      - run: npx playwright install chromium
+
+      - run: npx astro check
+      - run: npm test
+      - run: npm run test:a11y
+      - run: npm run build
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Confirm the assumed identity
+        run: aws sts get-caller-identity
+
+      # The cache passes here mirror scripts/deploy.ps1. Change one, check
+      # the other.
+      # Pass 1: content-hashed assets. A changed file is a changed URL, so a
+      # year-long immutable TTL is safe. --delete lives here so stale hashed
+      # assets get cleaned up.
+      - name: Sync hashed assets
+        run: |
+          aws s3 sync dist "s3://${{ vars.SITE_BUCKET }}" --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "*.html" \
+            --exclude "favicon.svg" \
+            --exclude "fonts/*"
+
+      # Pass 2: assets with stable filenames. Immutable here would strand a
+      # visitor on an old font or favicon for a year, and an invalidation
+      # cannot reach a browser cache.
+      - name: Sync unhashed assets
+        run: |
+          aws s3 sync dist "s3://${{ vars.SITE_BUCKET }}" \
+            --cache-control "public,max-age=86400" \
+            --exclude "*" \
+            --include "favicon.svg" \
+            --include "fonts/*"
+
+      # Pass 3: HTML last. Uploading it first would serve pages referencing
+      # hashed assets that have not landed yet.
+      - name: Sync HTML
+        run: |
+          aws s3 sync dist "s3://${{ vars.SITE_BUCKET }}" \
+            --cache-control "public,max-age=0,must-revalidate" \
+            --exclude "*" \
+            --include "*.html"
+
+      # /* counts as one path against the 1,000 free monthly paths.
+      - name: Invalidate
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.SITE_DISTRIBUTION_ID }}" \
+            --paths "/*"
