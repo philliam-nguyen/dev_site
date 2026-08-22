@@ -155,15 +155,22 @@ code {
   color: var(--ink-dim);
   background: var(--panel);
   transition: color .15s ease, border-color .15s ease, background .15s ease;
+  /* Sticky highlight: reverting to the default look is delayed ~forever,
+     so the last-hovered box stays lit after the pointer leaves. Hovering
+     a sibling resets it via the :has rule below. */
+  transition-delay: 9999s;
 }
 .badge:hover {
+  transition-delay: 0s;
   color: var(--accent-text);
   border-color: var(--accent-border);
   background: var(--accent-soft);
 }
-/* Only the hovered badge is lit: hovering a sibling drops the accent
-   badge back to the default look. */
-.meta:has(.badge:hover) .badge--accent:not(:hover) {
+/* Only the hovered badge is lit: hovering any badge drops every other
+   badge (the accent one and any lingering sticky highlight) back to the
+   default look immediately. */
+.meta:has(.badge:hover) .badge:not(:hover) {
+  transition-delay: 0s;
   color: var(--ink-dim);
   border-color: var(--line);
   background: var(--panel);
@@ -355,8 +362,11 @@ h2 {
   padding: 3px 8px;
   text-decoration: none;
   transition: color .15s ease, border-color .15s ease, background .15s ease;
+  /* Same sticky-highlight trick as the badges. */
+  transition-delay: 9999s;
 }
 .card-link:hover {
+  transition-delay: 0s;
   color: var(--accent-text);
   border-color: var(--accent-border);
   background: var(--accent-soft);
@@ -377,7 +387,8 @@ h2 {
 }
 .card-link:not(.card-link--live) { position: relative; z-index: 1; }
 /* Same exclusive-highlight rule as the badges. */
-.card-links:has(.card-link:hover) .card-link--live:not(:hover) {
+.card-links:has(.card-link:hover) .card-link:not(:hover) {
+  transition-delay: 0s;
   color: var(--ink-dim);
   border-color: var(--line);
   background: transparent;
