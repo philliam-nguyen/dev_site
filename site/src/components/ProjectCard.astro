@@ -28,8 +28,8 @@ const idx = String(index).padStart(2, '0');
     </div>
     {(live || repo) && (
       <div class="card-links">
-        {live && <a href={live} class="card-link card-link--live">Live</a>}
-        {repo && <a href={repo} class="card-link">Source</a>}
+        {live && <a href={live} class="card-link card-link--live" target="_blank" rel="noopener">Live</a>}
+        {repo && <a href={repo} class="card-link" target="_blank" rel="noopener">Source</a>}
       </div>
     )}
   </div>

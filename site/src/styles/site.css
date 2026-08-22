@@ -78,8 +78,8 @@ code {
 .eyebrow .socials a:hover,
 .eyebrow .socials a:focus-visible { color: var(--accent-text); }
 .eyebrow .socials svg {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   fill: currentColor;
 }
 

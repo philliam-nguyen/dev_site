@@ -23,7 +23,7 @@ const icons = {
   {socials.length > 0 && (
     <span class="socials">
       {socials.map(s => (
-        <a href={s.href} aria-label={icons[s.icon].label}>
+        <a href={s.href} aria-label={icons[s.icon].label} target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icons[s.icon].path} /></svg>
         </a>
       ))}
