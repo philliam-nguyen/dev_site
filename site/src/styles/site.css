@@ -161,6 +161,13 @@ code {
   border-color: var(--accent-border);
   background: var(--accent-soft);
 }
+/* Only the hovered badge is lit: hovering a sibling drops the accent
+   badge back to the default look. */
+.meta:has(.badge:hover) .badge--accent:not(:hover) {
+  color: var(--ink-dim);
+  border-color: var(--line);
+  background: var(--panel);
+}
 .badge--accent {
   color: var(--accent-text);
   border-color: var(--accent-border);
@@ -255,6 +262,7 @@ h2 {
 }
 
 .card {
+  position: relative;
   border: 1px solid var(--line);
   background: var(--panel);
   display: flex;
@@ -346,12 +354,33 @@ h2 {
   border: 1px solid var(--line);
   padding: 3px 8px;
   text-decoration: none;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
 }
-.card-link:hover { color: var(--accent-text); border-color: var(--accent-border); }
+.card-link:hover {
+  color: var(--accent-text);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
 .card-link--live {
   color: var(--accent-text);
   border-color: var(--accent-border);
   background: var(--accent-soft);
+}
+/* Stretched link: the Live link's ::after covers the card, so the whole
+   card clicks through to the live app. The live link itself must stay
+   unpositioned for inset to resolve against .card; other links lift
+   above the overlay to stay clickable. */
+.card-link--live::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.card-link:not(.card-link--live) { position: relative; z-index: 1; }
+/* Same exclusive-highlight rule as the badges. */
+.card-links:has(.card-link:hover) .card-link--live:not(:hover) {
+  color: var(--ink-dim);
+  border-color: var(--line);
+  background: transparent;
 }
 
 .grid + .stub { margin-top: 18px; }
