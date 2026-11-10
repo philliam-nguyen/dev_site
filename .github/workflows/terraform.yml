@@ -40,7 +40,7 @@ jobs:
       # Findings at HIGH/CRITICAL fail the push. Accepted findings live in
       # .trivyignore at the repo root, each with its reason.
       - name: Security scan
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: config
           scan-ref: infra/
