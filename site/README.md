@@ -17,8 +17,8 @@ npm run test:a11y  playwright and axe, in both color schemes
 
 `npm run test:a11y` drives a real browser. Install it once with
 `npx playwright install chromium`; `npm ci` does not.
-
-**Node 22.12 or newer.** Astro 7 requires it, and support for 18 and 20 was
+**Node 22.23.4 or newer.** Astro 7.4 requires it, and support for 18 and 20 was
+dropped in v6.
 dropped in v6.
 
 ## Publishing

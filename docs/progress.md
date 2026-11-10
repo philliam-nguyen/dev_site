@@ -227,7 +227,7 @@ source of truth.
   before the CSP is written, `npx playwright install chromium` as a workflow
   step `npm ci` will not cover, and the placeholder `site` URL in
   `astro.config.mjs`. All four are resolved in the plan, at Units 2.3 and 3.2.
-- **Node 22.12 or newer**, required by Astro 7. The CI runner needs it too.
+- **Node 22.23.4 or newer**, required by Astro 7.4. CI tracks the latest Node 22.
 - **The remote uses an SSH host alias**, `git@github-personal:...`, not
   `github.com`. A pasted HTTPS URL will fail with `Permission denied`.
 
