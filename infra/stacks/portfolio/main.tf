@@ -22,7 +22,7 @@ module "site" {
   zone_id           = data.terraform_remote_state.platform.outputs.zone_id
   certificate_arn   = data.terraform_remote_state.platform.outputs.certificate_arn
   oidc_provider_arn = data.terraform_remote_state.platform.outputs.oidc_provider_arn
-  github_sub        = "repo:philliam-nguyen/dev_site:ref:refs/heads/main"
+  github_sub        = "repo:philliam-nguyen@151580529/dev_site@1323385042:ref:refs/heads/main"
 
   # default-src 'none' makes the zero-JavaScript guarantee a header the
   # browser enforces. Depends on site/astro.config.mjs pinning
