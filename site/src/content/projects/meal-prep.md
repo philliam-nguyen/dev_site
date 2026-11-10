@@ -1,5 +1,5 @@
 ---
-title: Meal Prep App
+title: Thyme Saver
 blurb: Recipe browser, shopping lists, and what-can-I-make matching. Postgres on the homelab, AWS ingress over Tailscale.
 stack: ["React", "Fastify", "Postgres", "Docker", "AWS"]
 year: 2026
